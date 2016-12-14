@@ -1,31 +1,38 @@
-require 'set'
 require_relative 'state'
+require 'benchmark'
 
 floors = File.open('input.txt').readlines.map do |floor|
   /nothing/ =~ floor ? [[],[]] :
     [floor.scan(/(\w+) gen/).flatten.sort, floor.scan(/(\w+)-comp/).flatten.sort]
 end
 
-state = State.new(floors)
+types = floors.flatten.uniq
+
+data = types.map do |type|
+  [floors.index { |floor| floor.first.include?(type) }, floors.index { |floor| floor.last.include?(type) }]
+end .sort.reverse
+
+bottom_count = data.count { |isotope| isotope == [0,0] }
+
+data = data[0..-bottom_count]
+
+
+# p data
+
+state = State.new(data)
 
 queue = [state]
-tried = Set.new(queue)
-max_depth = 50
-until queue.first.depth > max_depth || queue.first.solved?
-  current = queue.shift
-  # p current.depth
-  string = "#{tried.length} #{current.depth} #{queue.length}\n"
-  current.floors.reverse.each do |floor|
-    string += "#{floor[0].length} #{floor[1].length}\n"
+tried = queue.dup
+
+puts Benchmark.measure {
+  until queue.first.done?
+    current = queue.shift
+    new_moves = current.moves - tried
+    tried = (tried + new_moves).uniq
+    queue = (queue + new_moves).uniq
+    # p current.isotopes
   end
-  puts string
-  queue = (queue + current.moves).uniq - tried.to_a
-  # queue = queue.sort_by { |move| move.value }.reverse
-  tried.merge([current])
-end
-# p tried.length
-if queue.first.solved?
-  p queue.first
-else
-  p "I need mooa pawaaa captain"
-end
+}
+
+# bottom_count += 2
+p queue.first.depth  + (bottom_count - 1) * 12

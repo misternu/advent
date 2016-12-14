@@ -1,146 +1,81 @@
 class State
-  attr_reader :floors, :current, :depth
-  def initialize(floors, current = 0, depth = 0)
-    @floors = floors
-    @current = current
+  TOP_FLOOR = 3
+  attr_reader :isotopes, :elevator, :depth
+  def initialize(isotopes, elevator = 0, depth = 0)
+    @isotopes = isotopes.reject { |isotope| isotope == [TOP_FLOOR, TOP_FLOOR] }
+    @elevator = elevator
     @depth = depth
   end
 
   def can_move
-    directions = []
-    directions << "up" if current < floors.length - 1
-    directions << "down" if current > 0
-    directions
+    return [1] if elevator == 0
+    return [-1] if elevator == TOP_FLOOR
+    [1,-1]
   end
 
-  def value
-    points = 0
-    floors.each_with_index do |floor, index|
-      points += (floor[0].length + floor[1].length) ** index
-    end
-    points - depth
+  def index_range
+    (0...usable_isotopes.length).to_a
+  end
+
+  def combinations
+    range = index_range
+    range.combination(1).to_a + range.combination(2).to_a
   end
 
   def moves
-    directions = can_move
-    potential_moves = []
-
-    if directions.include?("up")
-      #try to move two gens up
-      potential_moves += move_gens(current_gens.combination(2))
-      #try to move two chips up
-      potential_moves += move_chips(current_chips.combination(2))
-      #try to move pairs up
-      potential_moves += move_pairs(pairs)
+    moves = []
+    can_move.each do |dir|
+      combinations.each do |indices|
+        # Move one or two generators
+        if indices.all? { |index| isotopes[index][0] == elevator }
+          state = isotopes.dup
+          indices.each { |index| state[index] = [state[index][0] + dir, state[index][1]] }
+          moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
+        end
+        # Move one or two microchips
+        if indices.all? { |index| isotopes[index][1] == elevator }
+          state = isotopes.dup
+          indices.each { |index| state[index] = [state[index][0], state[index][1] + dir] }
+          moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
+        end
+      end
+      # Move one pair
+      index_range.each do |index|
+        if isotopes[index][0] == elevator && isotopes[index][1] == elevator
+          state = isotopes.dup
+          state[index] = [state[index][0] + dir, state[index][1] + dir]
+          moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
+        end
+      end
     end
-
-    if directions.include?("down")
-      #try to move one gen down
-      # potential_moves += move_gens(current_gens.combination(1), -1)
-      #try to move one chip down
-      potential_moves += move_chips(current_chips.combination(1), -1)
-    end
-
-    # Cull the list before potentially resorting to moving one item up alone
-    # potential_moves = potential_moves.reject { |move| move.fried? }
-
-    # if potential_moves.empty? && directions.include?("up")
-    #   #try to move one gen up
-    #   potential_moves += move_gens(current_gens.combination(1))
-    #   #try to move one chip up
-    #   potential_moves += move_chips(current_chips.combination(1))
-    # end
-
-    potential_moves.reject { |move| move.fried? }
+    moves.uniq.reject { |state| state.fried? }
   end
 
-  def move_gens(combinations, dir = 1)
-    combinations.map do |gens|
-      state = floors.clone
-      state[current] = [(state[current][0] - gens).sort, state[current][1]]
-      state[current + dir] = [(state[current + dir][0] + gens).sort, state[current + dir][1]]
-      State.new(state, current + dir, depth + 1)
-    end
+  def usable_isotopes
+    isotopes.include?([0,0]) ? isotopes[0..isotopes.index([0,0])] : isotopes
   end
-
-  def move_chips(combinations, dir = 1)
-    combinations.map do |chips|
-      state = floors.clone
-      state[current] = [state[current][0], (state[current][1] - chips).sort]
-      state[current + dir] = [state[current + dir][0], (state[current + dir][1] + chips).sort]
-      State.new(state, current + dir, depth + 1)
-    end
-  end
-
-  def move_pairs(pairs, dir = 1)
-    pairs.map do |pair|
-      state = floors.clone
-      state[current] = [(state[current][0] - [pair]).sort, (state[current][1] - [pair]).sort]
-      state[current+dir] = [(state[current + dir][0] + [pair]).sort, (state[current + dir][1] + [pair]).sort]
-      State.new(state, current + dir, depth + 1)
-    end
-  end
-
-  # def moves
-  #   neighboring_floors.map do |index|
-  #     # One or two microchips
-  #     chip_moves = (current_chips.combination(1).to_a + current_chips.combination(2).to_a).map do |chips|
-  #       state = floors.clone
-  #       state[current] = [state[current][0], (state[current][1] - chips).sort]
-  #       state[index] = [state[index][0], (state[index][1] + chips).sort]
-  #       State.new(state, index, depth + 1)
-  #     end
-  #     # One or two generators
-  #     gen_moves = (current_gens.combination(1).to_a + current_gens.combination(2).to_a).map do |gens|
-  #       state = floors.clone
-  #       state[current] = [(state[current][0] - gens).sort, state[current][1]]
-  #       state[index] = [(state[index][0] + gens).sort, state[index][1]]
-  #       State.new(state, index, depth + 1)
-  #     end
-  #     # A generator and its chip
-  #     pair_moves = pairs.map do |pair|
-  #       state = floors.clone
-  #       state[current] = [(state[current][0] - [pair]).sort, (state[current][1] - [pair]).sort]
-  #       state[index] = [(state[index][0] + [pair]).sort, (state[index][1] + [pair]).sort]
-  #       State.new(state, index, depth + 1)
-  #     end
-  #     [chip_moves, gen_moves, pair_moves]
-  #   end .flatten.reject { |move| move.fried? }
-  # end
 
   def fried?
-    floors.any? { |floor| (floor[1] - floor[0]).length > 0 && floor[0].length > 0 }
+    isotopes.each do |isotope|
+      next if isotope.first == isotope.last
+      return true if isotopes.any? { |gen| gen.first == isotope.last }
+    end
+    false
   end
 
-  def solved?
-    floors[0...-1].all? { |gen, chip| gen.length == 0 && chip.length == 0 }
-  end
-
-  def pairs
-    current_gens & current_chips
-  end
-
-  def current_gens
-    current_floor.first
-  end
-
-  def current_chips
-    current_floor.last
-  end
-
-  def current_floor
-    floors[current]
-  end
-
-  def ==(other)
-    floors == other.floors && current == other.current
+  def done?
+    @isotopes.empty?
   end
 
   def hash
-    [floors, current].hash
+    [isotopes, elevator].hash
+  end
+
+  def ==(other)
+    isotopes == other.isotopes && elevator == other.elevator
   end
 
   def eql?(other)
-    self.hash == other.hash
+    self == other
   end
 end
