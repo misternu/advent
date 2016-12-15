@@ -5,9 +5,6 @@ discs = File.open('input.txt').readlines.map(&:strip).map do |disc|
   Disc.new(positions, initial)
 end
 
-# PART TWO
-discs << Disc.new(11,0)
-
 def right_time(discs, time)
   discs.each_with_index do |disc, index|
     return false unless disc.open_at_t(time + index + 1)
@@ -15,6 +12,15 @@ def right_time(discs, time)
   return true
 end
 
+# PART 1
+time = 0
+until right_time(discs, time) do
+  time += 1
+end
+p time
+
+# PART 2
+discs << Disc.new(11,0)
 time = 0
 until right_time(discs, time) do
   time += 1
