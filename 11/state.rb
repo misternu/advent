@@ -33,11 +33,11 @@ class State
           moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
         end
         # Move one or two microchips
-        if indices.all? { |index| isotopes[index][1] == elevator }
-          state = isotopes.dup
-          indices.each { |index| state[index] = [state[index][0], state[index][1] + dir] }
-          moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
-        end
+        # if indices.all? { |index| isotopes[index][1] == elevator }
+        #   state = isotopes.dup
+        #   indices.each { |index| state[index] = [state[index][0], state[index][1] + dir] }
+        #   moves << State.new(state.sort.reverse, elevator + dir, depth + 1)
+        # end
       end
       # Move one pair
       index_range.each do |index|
