@@ -61,13 +61,16 @@ class State
   end
 
   def move_states
-    # Dont move if you're done
-    return [] if position == [3,3]
+    return [] if done?
     possible = []
     possible << new_state('U') if can_move(0)
     possible << new_state('D') if can_move(1)
     possible << new_state('L') if can_move(2)
     possible << new_state('R') if can_move(3)
     possible
+  end
+
+  def done?
+    position == [3,3]
   end
 end
