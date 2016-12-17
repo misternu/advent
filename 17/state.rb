@@ -33,45 +33,41 @@ class State
     ('b'..'f').include?(digest.hexdigest[direction])
   end
 
+  def new_digest(letter)
+    digest.dup.update(letter)
+  end
+
+  def new_position(letter)
+    case letter
+    when 'U'
+      [position[0]-1, position[1]]
+    when 'D'
+      [position[0]+1, position[1]]
+    when 'L'
+      [position[0], position[1]-1]
+    when 'R'
+      [position[0], position[1]+1]
+    end
+  end
+
+  def new_moves(letter)
+    moves + [letter]
+  end
+
+  def new_state(letter)
+    State.new({ digest: new_digest(letter),
+                position: new_position(letter),
+                moves: new_moves(letter)})
+  end
+
   def move_states
+    # Dont move if you're done
     return [] if position == [3,3]
     possible = []
-    if can_move(0)
-      new_digest = digest.dup.update('U')
-      new_position = [position[0]-1, position[1]]
-      possible << State.new({
-          digest: new_digest,
-          position: new_position,
-          moves: moves + ['U']
-        })
-    end
-    if can_move(1)
-      new_digest = digest.dup.update('D')
-      new_position = [position[0]+1, position[1]]
-      possible << State.new({
-          digest: new_digest,
-          position: new_position,
-          moves: moves + ['D']
-        })
-    end
-    if can_move(2)
-      new_digest = digest.dup.update('L')
-      new_position = [position[0], position[1]-1]
-      possible << State.new({
-          digest: new_digest,
-          position: new_position,
-          moves: moves + ['L']
-        })
-    end
-    if can_move(3)
-      new_digest = digest.dup.update('R')
-      new_position = [position[0], position[1]+1]
-      possible << State.new({
-          digest: new_digest,
-          position: new_position,
-          moves: moves + ['R']
-        })
-    end
+    possible << new_state('U') if can_move(0)
+    possible << new_state('D') if can_move(1)
+    possible << new_state('L') if can_move(2)
+    possible << new_state('R') if can_move(3)
     possible
   end
 end
