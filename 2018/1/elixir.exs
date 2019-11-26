@@ -33,12 +33,12 @@ defmodule Day1 do
       integer
     end)
     |> Stream.cycle()
-    |> Enum.reduce_while({0, MapSet.new([0])}, fn x, {current_frequency, seen_frequencies} ->
+    |> Enum.reduce_while({0, %{0 => true}}, fn x, {current_frequency, seen_frequencies} ->
       new_frequency = current_frequency + x
-      if new_frequency in seen_frequencies do
+      if seen_frequencies[new_frequency] do
         {:halt, new_frequency}
       else
-        {:cont, {new_frequency, MapSet.put(seen_frequencies, new_frequency)}}
+        {:cont, {new_frequency, Map.put(seen_frequencies, new_frequency, true)}}
       end
     end)
   end
@@ -72,7 +72,7 @@ case System.argv do
         "-4\n"
         ]
 
-        assert repeat_frequency(io) == 10
+        assert repeat_frequency_eager(io) == 10
       end
     end
 
@@ -82,15 +82,15 @@ case System.argv do
     |> Day1.final_frequency()
     |> IO.puts
 
-    __DIR__ <> "/" <> input_file
-    |> File.stream!([], :line)
-    |> Day1.repeat_frequency()
-    |> IO.puts
-
     # __DIR__ <> "/" <> input_file
-    # |> File.read!()
-    # |> Day1.repeat_frequency_eager()
+    # |> File.stream!([], :line)
+    # |> Day1.repeat_frequency()
     # |> IO.puts
+
+    __DIR__ <> "/" <> input_file
+    |> File.read!()
+    |> Day1.repeat_frequency_eager()
+    |> IO.puts
 
   _ ->
     IO.puts :stderr, "use --test or file name"
