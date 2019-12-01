@@ -5,15 +5,16 @@ defmodule Day1 do
     |> Enum.sum
   end
 
-  def fuel_recursive(total, 0), do: total
-  def fuel_recursive(total, module) do
-    new_fuel = max((div module, 3) - 2, 0)
-    fuel_recursive(total + new_fuel, new_fuel)
+  def fuel_recursive(module) when module < 9, do: 0
+  def fuel_recursive(module) do
+    # body recursion turned out to be faster
+    new_fuel = (div module, 3) - 2
+    new_fuel + fuel_recursive(new_fuel)
   end
 
   def fuel_and_extra(modules) do
     modules
-    |> Enum.map(fn number -> fuel_recursive(0, number) end)
+    |> Enum.map(fn number -> fuel_recursive(number) end)
     |> Enum.sum
   end
 end
