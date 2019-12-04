@@ -17,25 +17,25 @@ def walk(path)
       distance.times do
         position[0] += 1
         steps += 1
-        wire[position.dup] = steps
+        wire[position.dup] ||= steps
       end
     when "L"
       distance.times do
         position[0] -= 1
         steps += 1
-        wire[position.dup] = steps
+        wire[position.dup] ||= steps
       end
     when "U"
       distance.times do
         position[1] += 1
         steps += 1
-        wire[position.dup] = steps
+        wire[position.dup] ||= steps
       end
     when "D"
       distance.times do
         position[1] -= 1
         steps += 1
-        wire[position.dup] = steps
+        wire[position.dup] ||= steps
       end
     else
       p "ERROR"
