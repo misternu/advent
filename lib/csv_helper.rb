@@ -6,10 +6,11 @@ module CSVHelpers
   end
 
   def comma_separated_strings(file)
-    CSV.read(file_path(file)).flatten.map(&:strip)
-  rescue Errno::ENOENT 
-    puts "File not found"
-    []
+    open_csv(file).flatten.map(&:strip)
+  end
+
+  def plain_csv(file)
+    open_csv(file)
   end
 
   def line_separated_strings(file)

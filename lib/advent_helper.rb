@@ -20,6 +20,13 @@ class AdventHelper
   def open_file(file)
     File.open(file_path(file))
   rescue Errno::ENOENT
+    puts "File not found: #{file}"
+    []
+  end
+
+  def open_csv(file)
+    CSV.read(file_path(file))
+  rescue Errno::ENOENT 
     puts "File not found"
     []
   end

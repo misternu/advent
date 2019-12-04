@@ -2,8 +2,7 @@ require_relative '../../lib/advent_helper'
 
 helper = AdventHelper.new(script_root:__dir__)
 
-input = helper.line_separated_strings('input.txt')
-path1, path2 = input.map { |path| path.split(',') }
+path1, path2 = helper.plain_csv('input.txt')
 
 def walk(path)
   position = [0,0]
