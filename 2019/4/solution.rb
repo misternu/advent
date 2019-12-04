@@ -1,37 +1,20 @@
-require_relative '../../lib/advent_helper'
-
-helper = AdventHelper.new(script_root:__dir__)
-
-min = 130254
-max = 678275
-
-def has_repeat(digits)
-  (0...digits.length-1).any? do |i|
-    digits[i] == digits[i + 1]
-  end
-end
-
 def ascends(digits)
-  (0...digits.length-1).all? do |i|
-    digits[i] >= digits[i + 1]
-  end
+  (0...digits.length-1).all? { |i| digits[i] >= digits[i + 1] }
 end
 
-def has_a_double(digits)
-  (0...digits.length-1).any? do |i|
-    digits[i] == digits[i + 1] && digits.count(digits[i]) == 2
-  end
-end
-
-range = (min..max)
+range = (130254..678275)
 part1 = 0
 part2 = 0
 
 range.each do |num|
   digits = num.digits
   if ascends(digits)
-    part1 += 1 if has_repeat(digits)
-    part2 += 1 if has_a_double(digits)
+    if (1..9).any? { |i| digits.count(i) == 2 }
+      part1 += 1
+      part2 += 1
+    elsif (1..9).any? { |i| digits.count(i) > 1 }
+      part1 += 1
+    end
   end
 end
 
