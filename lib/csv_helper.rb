@@ -7,7 +7,7 @@ module CSVHelpers
 
   def comma_separated_strings(file)
     CSV.read(file_path(file)).flatten.map(&:strip)
-  rescue Errno::ENOENT
+  rescue Errno::ENOENT 
     puts "File not found"
     []
   end
