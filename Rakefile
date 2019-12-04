@@ -8,3 +8,11 @@ end
 task :time do
   sh "time ruby #{config['script']}"
 end
+
+task :create, [:directory] do |t, args|
+  directory = args[:directory]
+  mkdir_p directory
+  unless File.exists?("#{directory}/solution.rb")
+    cp 'lib/template.rb', "#{directory}/solution.rb"
+  end
+end
