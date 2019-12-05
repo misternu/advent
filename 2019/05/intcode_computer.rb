@@ -10,6 +10,7 @@ class IntcodeIO
   end
 
   def output(value)
+    p value
     @outputs << value
   end
 
@@ -27,8 +28,8 @@ class IntcodeComputer
   end
 
   def run
-    p @address
-    p @memory.slice(@address, 4)
+    # p @address
+    # p @memory.slice(@address, 4)
     @should_step = true
     if operate[1]
       step
