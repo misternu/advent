@@ -17,18 +17,21 @@ defmodule Day1 do
     |> Enum.map(fn number -> fuel_recursive(number) end)
     |> Enum.sum
   end
+
+  def run do
+    modules = __DIR__ <> "/" <> "input.txt"
+    |> File.read!()
+    |> String.split("\n", trim: true)
+    |> Enum.map(fn line ->
+      {integer, _leftover} = Integer.parse(line)
+      integer
+    end)
+    
+    IO.inspect(fuel(modules))
+    IO.inspect(fuel_and_extra(modules))
+  end
 end
 
-modules = __DIR__ <> "/" <> "input.txt"
-|> File.read!()
-|> String.split("\n", trim: true)
-|> Enum.map(fn line ->
-  {integer, _leftover} = Integer.parse(line)
-  integer
-end)
 
-Day1.fuel(modules)
-|> IO.inspect
 
-Day1.fuel_and_extra(modules)
-|> IO.inspect
+
