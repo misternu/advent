@@ -1,8 +1,8 @@
 class IntcodeComputer
-  def initialize(memory : Array(Int32), address : Int32, noun : Int32, verb : Int32)
+  def initialize(memory : Array(Int32), noun : Int32, verb : Int32)
     @memory = memory
     @memory = memory.dup
-    @address = address
+    @address = 0
     @noun = noun
     @verb = verb
     @memory[1] = @noun
@@ -70,17 +70,20 @@ end
 
 input = File.read("input.txt").split(',').map { |n| n.to_i }
 
-computer = IntcodeComputer.new(input, 0, 12, 2)
+computer = IntcodeComputer.new(input, 12, 2)
 p computer.run[0]
 
 target = 19690720
-(0..99).to_a.repeated_permutations(2).each do |pair|
-  noun = pair[0]
-  verb = pair[1]
-  computer = IntcodeComputer.new(input, 0, noun, verb)
-  result = computer.run[0]
-  if result == target
-    p 100 * noun + verb
-    break
+(0..99).each do |noun|
+  found = false
+  (0..99).each do |verb|
+    computer = IntcodeComputer.new(input, noun, verb)
+    result = computer.run[0]
+    if result == target
+      p 100 * noun + verb
+      found = true
+      break
+    end
   end
+  break if found
 end

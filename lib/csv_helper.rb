@@ -13,6 +13,10 @@ module CSVHelpers
     open_csv(file)
   end
 
+  def plain_string(file)
+    open_file(file)
+  end
+
   def line_separated_strings(file)
     open_file(file).map(&:chomp)
   end
