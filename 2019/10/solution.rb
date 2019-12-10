@@ -77,6 +77,6 @@ until two_hundredth
       p k.first * 100 + k.last
       two_hundredth = true
     end
-    positions[k] = nil
+    positions.delete(k)
   end
 end
