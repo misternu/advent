@@ -53,10 +53,11 @@ positions.keys.each do |i|
     end
   end
 end
-p counts.max_by { |k, v| v }
+station = counts.max_by { |k, v| v }
+p station.last
 
 # Part 2
-station = [30, 34]
+station = station.first
 two_hundredth = nil
 destroyed = 0
 until two_hundredth
