@@ -1,19 +1,17 @@
 defmodule IntcodeComputer do
   def operate(program, address, 1) do
-    [a | [b | [c | _tail]]] = Enum.drop(program, address + 1)
-    [a_val, b_val] = [a, b] |> Enum.map(fn x -> Enum.at(program, x) end)
+    [a, b, c] = params(program, address, 3)
     operate(
-      List.replace_at(program, c, a_val + b_val),
+      List.replace_at(program, c, a + b),
       address + 4,
       Enum.at(program, address + 4)
     )
   end
 
   def operate(program, address, 2) do
-    [a | [b | [c | _tail]]] = Enum.drop(program, address + 1)
-    [a_val, b_val] = [a, b] |> Enum.map(fn x -> Enum.at(program, x) end)
+    [a, b, c] = params(program, address, 3)
     operate(
-      List.replace_at(program, c, a_val * b_val),
+      List.replace_at(program, c, a * b),
       address + 4,
       Enum.at(program, address + 4)
     )
@@ -25,6 +23,12 @@ defmodule IntcodeComputer do
 
   def run(program) do
     operate(program, 0, Enum.at(program,0))
+  end
+
+  def params(program, address, 3) do
+    [a | [b | [c | _tail]]] = Enum.drop(program, address + 1)
+    [a_val, b_val] = [a, b] |> Enum.map(fn x -> Enum.at(program, x) end)
+    [a_val, b_val, c]
   end
 
   def run(program, noun, verb) do
