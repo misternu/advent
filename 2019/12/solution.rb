@@ -40,7 +40,7 @@ class Collection
   end
 
   def move
-    @collection = @collection.map(&:move)
+    @collection.map(&:move)
   end
 
   def state
@@ -127,18 +127,56 @@ xcycle = nil
 ycycle = nil
 zcycle = nil
 
+animate = true
+
+if animate
+  require 'colorize'
+  COLORS = [:red, :green, :yellow, :blue]
+  xmax, xmin, ymax, ymin, zmax, zmin = [1770, -1795, 1093, -1795, 2295, -2178]
+end
+
+def distance(a, b)
+  Math.sqrt((b[0] - a[0]).abs ** 2 + (b[1] - a[1]).abs ** 2)
+end
+
+minz, maxz = [0, 0]
+
 until xcycle && ycycle && zcycle do
   state = bodies2.state
   knownx[state[0]] = true
   knowny[state[1]] = true
   knownz[state[2]] = true
 
+  if animate && steps > 130000 && steps % 2 == 0
+    pixel_size = 30
+    bodies = state.map(&:first).transpose
+    puts "\e[H"
+    ymax.downto(ymin).each_slice(pixel_size) do |y|
+      ay = y.first
+      puts (xmin..xmax).each_slice(pixel_size).map { |x|
+        ax = x.first
+        in_range = bodies.select do |body|
+          size = pixel_size * ((body.last + zmin.abs + 500) / 447.3)
+          distance([ax, ay], body[0..1]) < size
+        end
+        if in_range.any?
+          foreground = in_range.max_by { |b| b.last }
+          bodies.index(foreground)
+          "#".colorize(COLORS[bodies.index(foreground)])
+        else
+          " "
+        end
+      }.join
+    end
+    sleep 0.01
+  end
+
   steps += 1
   bodies2.all.combination(2).each do |a, b|
     a.gravitate(b)
     b.gravitate(a)
   end
-  bodies2.all.map(&:move)
+  bodies2.move
 
   new_state = bodies2.state
   xcycle ||= steps if knownx[new_state[0]]
@@ -146,4 +184,6 @@ until xcycle && ycycle && zcycle do
   zcycle ||= steps if knownz[new_state[2]]
 end
 
-p [xcycle, ycycle, zcycle].reduce(1, :lcm)
+unless animate
+  p [xcycle, ycycle, zcycle].reduce(1, :lcm)
+end
