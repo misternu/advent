@@ -28,6 +28,5 @@ end
 # Part 1
 p ore_need(reactions, 1)
 
-ONE_TRILLION = 1000000000000
 # Part 2
-p (0..ONE_TRILLION).bsearch { |n| ore_need(reactions, n) > ONE_TRILLION } - 1
+p (0..10000000).bsearch { |n| ore_need(reactions, n) > 1000000000000 } - 1
