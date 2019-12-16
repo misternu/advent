@@ -58,7 +58,7 @@ computer = IntcodeComputer.new(input, IntcodeIO.new([]))
 display = Display.new
 display.input(computer.run)
 
-animate = false
+animate = true
 
 while !computer.stopped
   computer.io.add(display.ai)
