@@ -22,15 +22,25 @@ input = helper.line_separated_strings('input.txt').first.split('').map(&:to_i)
 
 # Part 1
 digits = input.dup
+len = digits.length
 (1..100).each do |iteration|
-  (1..digits.length).each do |n|
-    digits[n-1] = digits.dup.zip(pattern_enumerator(n)).map { |a, b| (a * b)} .sum.abs % 10
+  duplicate = digits.dup
+  (0...len/2).each do |n|
+    digits[n] = duplicate.dup
+      .zip(pattern_enumerator(n+1))[n..-1]
+      .map { |a, b| (a * b) }
+      .sum.abs % 10
+  end
+  running_sum = 0
+  ((len-1).downto(len/2)).each do |n|
+    running_sum = (duplicate[n] + running_sum).abs % 10
+    digits[n] = running_sum
   end
 end
 puts digits[0...8].map(&:to_s).join
 
 # Part 2
-# digits = "03036732577212944063491565474664".split('').map(&:to_i) * 10000
+digits = "03036732577212944063491565474664".split('').map(&:to_i) * 10000
 digits = input * 10000
 offset = digits[0..6].map(&:to_s).join.to_i
 chopped_digits = digits[offset..-1]
