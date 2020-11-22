@@ -1,5 +1,10 @@
 require 'yaml'
-config = YAML.load_file(File.join(File.path(__dir__), '.advent_config.yml'))
+if File.exists?('.advent_config.yml')
+  config = YAML.load_file(File.join(File.path(__dir__), '.advent_config.yml'))
+else
+  config = {}
+end
+
 
 
 # Run Scripts
@@ -18,6 +23,10 @@ task :elixir do
   sh "elixir #{config['elixir']}"
 end
 
+desc "run ruby in entr"
+task :watch do
+  sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
+end
 
 # Run Benchmarks
 desc "run the default script in a benchmark"
@@ -50,6 +59,6 @@ task :create, [:directory] do |t, args|
     sh "touch #{elixir_path}"
   end
   File.open('.advent_config.yml', 'w') do |file|
-    file.write("ruby: #{ruby_path}\nelixir: #{elixir_path}")
+    file.write("directory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
   end
 end
