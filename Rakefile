@@ -5,8 +5,6 @@ else
   config = {}
 end
 
-
-
 # Run Scripts
 desc "run script defined in config"
 task :default do
