@@ -1,10 +1,13 @@
-require_relative './csv_helper.rb'
+require_relative './csv_helpers.rb'
+require_relative './print_helpers.rb'
 
 class AdventHelper
   include CSVHelpers
+  include PrintHelpers
 
   def initialize(options = {})
     @script_root = options.fetch(:script_root, root_dir)
+    clear
   end
 
   private
@@ -26,7 +29,7 @@ class AdventHelper
 
   def open_csv(file)
     CSV.read(file_path(file))
-  rescue Errno::ENOENT 
+  rescue Errno::ENOENT
     puts "File not found"
     []
   end
