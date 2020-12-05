@@ -1,5 +1,6 @@
-require_relative './csv_helpers.rb'
-require_relative './print_helpers.rb'
+require_relative './csv_helpers'
+require_relative './print_helpers'
+require_relative './auto_parser'
 
 class AdventHelper
   include CSVHelpers
@@ -8,6 +9,10 @@ class AdventHelper
   def initialize(options = {})
     @script_root = options.fetch(:script_root, root_dir)
     clear
+  end
+
+  def auto_parse(file = 'input.txt', options = {})
+    AutoParser.parse(File.open(file_path(file)).readlines, options)
   end
 
   private

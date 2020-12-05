@@ -1,4 +1,12 @@
 require 'yaml'
+
+begin
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec)
+rescue LoadError
+  # no rspec available
+end
+
 if File.exists?('.advent_config.yml')
   config = YAML.load_file(File.join(File.path(__dir__), '.advent_config.yml'))
 else
@@ -24,6 +32,11 @@ end
 desc "run ruby in entr"
 task :watch do
   sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
+end
+
+desc "run rspec in entr"
+task :spec_watch do
+  sh "ls **/*.rb | entr -r rspec spec"
 end
 
 # Run Benchmarks

@@ -1,0 +1,14 @@
+deal with increment 3
+deal into new stack
+cut -2846
+deal with increment 33
+cut -8467
+deal into new stack
+deal with increment 46
+cut 6752
+deal with increment 63
+deal into new stack
+deal with increment 70
+deal into new stack
+deal with increment 14
+cut -1804
