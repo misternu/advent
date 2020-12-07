@@ -14,7 +14,7 @@ target = File.join(File.path(__dir__), config['directory'], 'input.txt')
 while true
   sleep 1
   time = Time.now
-  if time.hour == 23 && time.sec > 10
+  if time.hour == 23 && time.sec > 10 || time.hour == 23 && time.min > 0
     break
   end
 end
