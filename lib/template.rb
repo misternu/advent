@@ -1,6 +1,9 @@
 require_relative '../../lib/advent_helper'
 helper = AdventHelper.new(script_root:__dir__)
-input = helper.line_separated_strings('input.txt')
+# input = helper.send(:open_file, 'input.txt').read
+# responses = input.split("\n\n").map { |r| r.split(/\s+/).map(&:chars) }
+input = helper.auto_parse
+# input = helper.line_separated_strings('input.txt')
 # input = helper.comma_separated_strings('input.txt')
 
 
