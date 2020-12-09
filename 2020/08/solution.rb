@@ -7,28 +7,85 @@ input = helper.line_separated_strings('input.txt')
 # input = helper.comma_separated_strings('input.txt')
 
 
+class AssemblyNode
+  attr_reader :input, :operations
+  attr_accessor :pos, :acc, :log, :visited
+  def initialize(input, options = {})
+    @input = input
+    @visited = Hash.new
+    @log = []
+    @operations = options.fetch(:operations, {})
+    @pos = 0
+    @acc = 0
+  end
+
+  def self.run(input, options = {})
+    self.new(input, options).run
+  end
+
+  def run
+    main_loop
+    halt
+  end
+
+  def main_loop
+    return if halt_condition
+    logging
+    tick
+    main_loop
+  end
+
+  def tick
+    operation = evaluate
+    output = operation.call(arguments)
+    persist(output)
+  end
+
+  def evaluate
+    operations[input[pos].split(' ').first]
+  end
+
+  def arguments
+    {
+      pos: pos,
+      acc: acc,
+      num: input[pos].split(' ').last.to_i
+    }
+  end
+
+  def persist(output)
+    self.acc = output[:acc] if output[:acc]
+    self.pos = output[:pos] if output[:pos]
+  end
+
+  def logging
+    visited[pos] = true
+    log << input[pos].dup
+  end
+
+  def halt_condition
+    visited[pos] || pos >= input.length
+  end
+
+  def halt
+    acc
+  end
+
+  def print_logs
+    puts log
+  end
+end
 
 # Part 1
-position = 0
-acc = 0
-visited = Hash.new
+options = {
+  operations: {
+    'acc' => lambda { |o| { acc: o[:acc] + o[:num], pos: o[:pos] + 1 } },
+    'jmp' => lambda { |o| { pos: o[:pos] + o[:num] } },
+    'nop' => lambda { |o| { pos: o[:pos] + 1 } }
+  }
+}
 
-while true
-  break if visited[position]
-  instr = input[position]
-  visited[position] = true
-  op, num = instr.split(' ')
-  case op
-  when 'acc'
-    acc += num.to_i
-  when 'jmp'
-    position += num.to_i
-    next
-  when 'nop'
-  end
-  position += 1
-end
-a = acc
+a = AssemblyNode.run(input, options)
 
 # Part 2
 b = nil
@@ -39,28 +96,11 @@ b = nil
   op = op == 'nop' ? 'jmp' : 'nop'
   instrs[i] = [op, num].join(' ')
 
-  position = 0
-  acc = 0
-  visited = Hash.new
+  node = AssemblyNode.new(instrs, options)
+  output = node.run
 
-  while true
-    break if visited[position] || position >= instrs.length
-    instr = instrs[position]
-    visited[position] = true
-    op, num = instr.split(' ')
-    case op
-    when 'acc'
-      acc += num.to_i
-    when 'jmp'
-      position += num.to_i
-      next
-    when 'nop'
-    end
-    position += 1
-  end
-
-  if position == instrs.length
-    b = acc
+  if node.pos == instrs.length
+    b = output
     break
   end
 end
