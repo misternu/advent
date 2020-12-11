@@ -8,7 +8,7 @@ class AdventHelper
 
   def initialize(options = {})
     @script_root = options.fetch(:script_root, root_dir)
-    clear
+    clear if options.fetch(:clear, true)
   end
 
   def auto_parse(file = 'input.txt', options = {})
