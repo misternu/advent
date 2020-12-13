@@ -2,7 +2,7 @@ require_relative '../../lib/advent_helper'
 helper = AdventHelper.new(script_root:__dir__)
 # input = helper.send(:open_file, 'input.txt').read
 # responses = input.split("\n\n").map { |r| r.split(/\s+/).map(&:chars) }
-input = helper.auto_parse
+input = helper.auto_parse.sort!
 # input = helper.auto_parse('sample_input.txt')
 # input = helper.line_separated_strings('input.txt')
 # input = helper.comma_separated_strings('input.txt')
@@ -10,47 +10,41 @@ input = helper.auto_parse
 
 
 # Part 1
-jolts = input.dup
-jolts << jolts.max + 3
+jolts = input.dup + [input.max + 3]
 counts = Hash.new(0)
-output = 0
+last = 0
 while jolts.length > 0
-  minimum = jolts.min
-  jolts.delete(minimum)
-  counts[minimum - output] += 1
-  output = minimum
+  minimum = jolts.delete(jolts.min)
+  counts[minimum - last] += 1
+  last = minimum
 end
-p counts
 a = counts[1] * counts[3]
 
+
+
 # Part 2
-
-
-def search(memo, bag, sequence = [0])
-  if memo[sequence.last]
-    return memo[sequence.last]
-  end
+def search(bag, sequence = [0], memo = Hash.new)
+  socket = sequence.last
+  return memo[socket] if memo[socket]
   if bag.empty?
-    memo[sequence.last] = 1
+    memo[socket] = 1
     return 1
   end
-  socket = sequence.last
-  choices = bag.select { |n| n - socket < 4 }
+  choices = bag.take_while { |n| n - socket < 4 }
   output = choices.sum do |choice|
-    new_bag = bag.dup
-    new_bag.delete(choice)
-    new_bag.reject! { |n| n < choice }
-    search(memo, new_bag, sequence + [choice])
+    new_bag = bag.reject { |n| n <= choice }
+    search(new_bag, sequence + [choice], memo)
   end
-  memo[sequence.last] = output
+  memo[socket] = output
   output
 end
 
-
+require 'benchmark'
 jolts = input.dup
-jolts << jolts.max + 3
 
-b = search(Hash.new, jolts)
+b = search(jolts)
+
+# puts Benchmark.measure { 1000.times do search(jolts) end }
 
 
 
