@@ -37,9 +37,9 @@ total = buses.first
 
 buses[1..-1].each_with_index do |bus, i|
   co = 0
+  prod = buses[0..i].reduce(&:*)
   while true
-    buses[0..1+i].sum * co
-    new_total = total + buses[0...1+i].reduce(&:*) * co
+    new_total = total + prod * co
     if (new_total + target[bus]) % bus == 0
       total = new_total
       break
