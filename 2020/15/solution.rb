@@ -21,14 +21,11 @@ end
 (2020 - input.length).times do
   indices = spoken[last]
   if indices.length == 1
-    num = 0
-    last = num
-    spoken[num] << index
+    last = 0
   else
-    num = indices[-1] - indices[-2]
-    last = num
-    spoken[num] << index
+    last = indices[-1] - indices[-2]
   end
+  spoken[num] << index
   index += 1
 end
 a = last
@@ -46,11 +43,10 @@ end
   indices = spoken[last]
   if indices.length == 1
     last = 0
-    spoken[last] << index
   else
     last = indices[-1] - indices[-2]
-    spoken[last] << index
   end
+  spoken[last] << index
   index += 1
 end
 b = last
