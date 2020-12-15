@@ -11,43 +11,33 @@ input = helper.auto_parse
 
 # Part 1
 index = 0
-spoken = Hash.new { |h, k| h[k] = [] }
+spoken = Hash.new
 last = nil
 input.each do |num|
-  last = num
-  spoken[num] << index
+  spoken[num] = index
   index += 1
 end
-(2020 - input.length).times do
-  indices = spoken[last]
-  if indices.length == 1
-    last = 0
-  else
-    last = indices[-1] - indices[-2]
-  end
-  spoken[num] << index
-  index += 1
+neckst = input.count(input.last) - 1
+(input.length...2020).each do |i|
+  last = neckst
+  neckst = spoken[last] ? i - spoken[last] : 0
+  spoken[last] = i
 end
 a = last
 
 # Part 2
 index = 0
-spoken = Hash.new { |h, k| h[k] = [] }
+spoken = Hash.new
 last = nil
 input.each do |num|
-  last = num
-  spoken[num] << index
+  spoken[num] = index
   index += 1
 end
-(30000000 - input.length).times do
-  indices = spoken[last]
-  if indices.length == 1
-    last = 0
-  else
-    last = indices[-1] - indices[-2]
-  end
-  spoken[last] << index
-  index += 1
+neckst = input.count(input.last) - 1
+(input.length...30000000).each do |i|
+  last = neckst
+  neckst = spoken[last] ? i - spoken[last] : 0
+  spoken[last] = i
 end
 b = last
 
