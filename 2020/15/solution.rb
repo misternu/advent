@@ -11,12 +11,8 @@ input = helper.auto_parse
 
 # Part 1
 index = 0
-spoken = Hash.new
+spoken = Hash[input.zip([*0...input.length])]
 last = nil
-input.each do |num|
-  spoken[num] = index
-  index += 1
-end
 neckst = input.count(input.last) - 1
 (input.length...2020).each do |i|
   last = neckst
@@ -27,12 +23,8 @@ a = last
 
 # Part 2
 index = 0
-spoken = Hash.new
+spoken = Hash[input.zip([*0...input.length])]
 last = nil
-input.each do |num|
-  spoken[num] = index
-  index += 1
-end
 neckst = input.count(input.last) - 1
 (input.length...30000000).each do |i|
   last = neckst
