@@ -25,6 +25,7 @@ class Tasks < Thor
     end
     FileUtils.touch elixir_path
     FileUtils.touch "#{directory}/input.txt"
+    FileUtils.touch "#{directory}/sample_input.txt"
     File.open('.advent_config.yml', 'w') do |file|
       file.write("directory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
     end

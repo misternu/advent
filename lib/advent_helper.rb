@@ -1,6 +1,7 @@
 require_relative './csv_helpers'
 require_relative './print_helpers'
 require_relative './auto_parser'
+require_relative './overrides'
 
 class AdventHelper
   include CSVHelpers
@@ -14,8 +15,6 @@ class AdventHelper
   def auto_parse(file = 'input.txt', options = {})
     AutoParser.parse(File.open(file_path(file)).readlines, options)
   end
-
-  private
 
   def root_dir
     File.expand_path('../', File.path(__dir__))
