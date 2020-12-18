@@ -39,17 +39,14 @@ end
 def token_reduce(tokens, ordered = false)
   return tokens if tokens.is_a?(String)
   return tokens.first if tokens.length < 2
-  plus_index = tokens.find_index("+")
-  if plus_index && ordered
-    a = token_reduce(tokens[plus_index-1], ordered).to_i
-    c = token_reduce(tokens[plus_index+1], ordered).to_i
-    token_reduce(tokens[0...plus_index-1] + [(a+c).to_s] + tokens[plus_index+2..-1], ordered)
-  else
-    a = token_reduce(tokens[0], ordered).to_i
-    c = token_reduce(tokens[2], ordered).to_i
-    value = tokens[1] == "+" ? (a+c).to_s : (a*c).to_s
-    token_reduce([value] + tokens[3..-1], ordered)
+  if ordered
+    operator_index = tokens.find_index("+")
   end
+  operator_index ||= 1
+  a = token_reduce(tokens[operator_index-1], ordered).to_i
+  c = token_reduce(tokens[operator_index+1], ordered).to_i
+  value = tokens[operator_index] == "+" ? (a+c).to_s : (a*c).to_s
+  token_reduce(tokens[0...operator_index-1] + [value] + tokens[operator_index+2..-1], ordered)
 end
 
 # Part 1
