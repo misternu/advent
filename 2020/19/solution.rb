@@ -52,10 +52,41 @@ end
 # Part 2
 # 8: 42 | 42 8
 # 11: 42 31 | 42 11 31
-rules[8] = [[42], [42, 8]]
+# p fourty_two = get_strings(rules, [42]).uniq
+# p thirty_one = get_strings(rules, [31]).uniq
 
-b = nil
+def search(rules, string, rule_id, values)
+  # p [string, values]
+  rule = rules[rule_id]
+  if rule.is_a?(String)
+    if values.empty?
+      string == rule
+    else
+      string[0] == rule && search(rules, string[1..-1], values[0], values[1..-1])
+    end
+  elsif rule.first.is_a?(Array)
+    rule.any? do |variant|
+      new_values = variant + values
+      search(rules, string, new_values[0], new_values[1..-1])
+    end
+  else
+    new_values = rule + values
+    search(rules, string, new_values[0], new_values[1..-1])
+  end
+end
 
+rules[8] = [[42], [42,8]]
+rules[11] = [[42,31], [42,11,31]]
+
+b = input_messages.count do |message|
+  value = search(rules, message, 0, [])
+  if value
+    p message
+  end
+  !!value
+end
+# b = nil
+# b = search(rules, "abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa", 0, [])
 
 
 helper.output(a, b)
