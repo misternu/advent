@@ -211,6 +211,8 @@ end
   end
 end
 
+# puts grid
+
 sea_monster = [
   "                  # ",
   "#    ##    ##    ###",
