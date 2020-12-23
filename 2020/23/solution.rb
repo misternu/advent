@@ -3,51 +3,85 @@ helper = AdventHelper.new(script_root:__dir__)
 input = "487912365"
 sample_input = "389125467"
 
-def step(cups, number = 9)
-  head = cups.shift
-  three = cups.shift(3)
+def step(next_cup, head, number = 9)
+  head
+  picked = []
+  pick = head
+  3.times do
+    picked << next_cup[pick]
+    pick = picked.last
+  end
 
   destination = ((head - 2) % number) + 1
-  exclude = [head] + three
-  while exclude.include?(destination)
+  while picked.include?(destination)
     destination = ((destination - 2) % number) + 1
   end
-  destination_index = cups.index(destination)
+  destination
 
-  cups = [head] + cups[0..destination_index] + three + cups[destination_index+1..-1]
-  cups.rotate(1)
+  a = next_cup[picked.last]
+  b = next_cup[destination]
+
+  next_cup[destination] = picked.first
+  next_cup[head] = a
+  next_cup[picked.last] = b
+  a
 end
 
 
 # Part 1
 # 89573246
-cups = input.split('').map(&:to_i)
+next_cup = Hash.new
+input_integers = input.split('').map(&:to_i)
+(0..7).each do |i|
+  next_cup[input_integers[i]] = input_integers[i+1]
+end
+next_cup[input_integers.last] = input_integers.first
 
+head = input_integers.first
 100.times do
-  cups = step(cups)
+  head = step(next_cup, head)
 end
 
-one_index = cups.index(1)
-a = cups.rotate(one_index)[1..-1].join
+until head == 1
+  head = next_cup[head]
+end
+
+result = []
+8.times do
+  result << next_cup[head]
+  head = next_cup[head]
+end
+
+a = result.map(&:to_s).join
 
 # Part 2
 one_million = 1_000_000
 ten_million = 10_000_000
-cups = sample_input.split('').map(&:to_i) + (10..one_million).to_a
+next_cup = Hash.new
+input_integers = input.split('').map(&:to_i)
+(0..7).each do |i|
+  next_cup[input_integers[i]] = input_integers[i+1]
+end
+next_cup[input_integers.last] = 10
+(10...one_million).each do |n|
+  next_cup[n] = n + 1
+end
+next_cup[one_million] = input_integers.first
 
 now = Time.now
-(1..ten_million).each do |i|
-  if i % 1000 == 0
-    p i
-    puts "pace #{(Time.now - now) * 10_000 / 60} minutes"
-    now = Time.now
-  end
-  cups = step(cups, one_million)
+head = input_integers.first
+ten_million.times do
+  head = step(next_cup, head, one_million)
 end
 
-one_index = cups.index(1)
-b = cups[one_index+1..one_index+2].reduce(&:*)
-# b = nil
+until head == 1
+  head = next_cup[head]
+end
+
+n = next_cup[head]
+m = next_cup[n]
+
+b = n * m
 
 
 
