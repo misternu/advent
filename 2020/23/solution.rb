@@ -4,26 +4,21 @@ input = "487912365"
 sample_input = "389125467"
 
 def step(next_cup, head, number = 9)
-  head
-  picked = []
-  pick = head
-  3.times do
-    picked << next_cup[pick]
-    pick = picked.last
+  x = next_cup[head]
+  y = next_cup[x]
+  z = next_cup[y]
+
+  dest = (head - 1) % number
+  while x == dest || y == dest || z == dest
+    dest = (dest - 1) % number
   end
 
-  destination = ((head - 2) % number) + 1
-  while picked.include?(destination)
-    destination = ((destination - 2) % number) + 1
-  end
-  destination
+  a = next_cup[z]
+  b = next_cup[dest]
 
-  a = next_cup[picked.last]
-  b = next_cup[destination]
-
-  next_cup[destination] = picked.first
+  next_cup[dest] = x
   next_cup[head] = a
-  next_cup[picked.last] = b
+  next_cup[z] = b
   a
 end
 
@@ -31,7 +26,7 @@ end
 # Part 1
 # 89573246
 next_cup = Hash.new
-input_integers = input.split('').map(&:to_i)
+input_integers = input.split('').map(&:to_i).map { |n| n - 1 }
 (0..7).each do |i|
   next_cup[input_integers[i]] = input_integers[i+1]
 end
@@ -42,44 +37,37 @@ head = input_integers.first
   head = step(next_cup, head)
 end
 
-until head == 1
-  head = next_cup[head]
-end
-
+head = 0
 result = []
 8.times do
-  result << next_cup[head]
+  result << next_cup[head] + 1
   head = next_cup[head]
 end
 
 a = result.map(&:to_s).join
 
 # Part 2
+# 2029056128
 one_million = 1_000_000
 ten_million = 10_000_000
 next_cup = Hash.new
-input_integers = input.split('').map(&:to_i)
+input_integers = input.split('').map(&:to_i).map { |n| n - 1 }
 (0..7).each do |i|
   next_cup[input_integers[i]] = input_integers[i+1]
 end
-next_cup[input_integers.last] = 10
-(10...one_million).each do |n|
+next_cup[input_integers.last] = 9
+(9...one_million-1).each do |n|
   next_cup[n] = n + 1
 end
-next_cup[one_million] = input_integers.first
+next_cup[one_million - 1] = input_integers.first
 
-now = Time.now
 head = input_integers.first
 ten_million.times do
   head = step(next_cup, head, one_million)
 end
 
-until head == 1
-  head = next_cup[head]
-end
-
-n = next_cup[head]
-m = next_cup[n]
+n = next_cup[0] + 1
+m = next_cup[n - 1] + 1
 
 b = n * m
 
