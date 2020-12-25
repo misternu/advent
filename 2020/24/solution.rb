@@ -1,12 +1,7 @@
 require_relative '../../lib/advent_helper'
 require 'set'
 helper = AdventHelper.new(script_root:__dir__)
-# input = helper.send(:open_file, 'input.txt').read
-# responses = input.split("\n\n").map { |r| r.split(/\s+/).map(&:chars) }
 input = helper.auto_parse
-# input = helper.auto_parse('sample_input.txt')
-# input = helper.line_separated_strings('input.txt')
-# input = helper.line_separated_strings('sample_input.txt')
 
 # Part 1
 VECTORS = {
@@ -71,9 +66,26 @@ def points_to_check(grid)
   all_points
 end
 
+def frame_string(grid, scale = 70)
+  lines = scale.downto(-scale).map do |y|
+    line = (-scale..scale).map do |x|
+      grid[[x, y]] ? "😆" : "  "
+    end
+    " " * (y + scale) + line.join
+  end .join("\n")
+  lines
+end
+
 # p points_to_check({[10,10] => true, [0, 0] => true}).count -> 14
 
+animate = false
+frames = []
+
 grid = tiles.dup
+if animate
+  frames << grid
+end
+
 100.times do
   new_tiles = Hash.new
   points_to_check(grid).each do |pos|
@@ -82,10 +94,28 @@ grid = tiles.dup
     end
   end
   grid = new_tiles
+  if animate
+    frames << grid
+  end
 end
 
 b = grid.values.count
 
 
-
 helper.output(a, b)
+
+if animate
+  strings = frames.map do |grid|
+    frame_string(grid)
+  end
+
+  strings.each do |string|
+    print "\e[H"
+    puts string
+    sleep 0.1
+  end
+end
+
+
+
+

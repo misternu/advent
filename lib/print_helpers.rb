@@ -4,6 +4,7 @@ module PrintHelpers
   end
 
   def output(*values)
+    stop_counter
     print_parts(*values)
     copy(*values)
   end
