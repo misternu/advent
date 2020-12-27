@@ -26,8 +26,8 @@ card_public, door_public = input
 card_loops = solve(card_public)
 door_loops = solve(door_public)
 
-a = encryption(door_public, card_loops)
-b = encryption_larger_loop_size(card_public, door_loops)
+a = [encryption(door_public, card_loops), encryption_larger_loop_size(card_public, door_loops)]
+b = nil
 
 
 helper.output(a, b)
