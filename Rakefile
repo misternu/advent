@@ -29,9 +29,19 @@ task :elixir do
   sh "elixir #{config['elixir']}"
 end
 
-desc "run ruby in entr"
-task :watch do
-  sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
+desc "run the default script in entr"
+task watch: ["watch:ruby"]
+
+desc "watched script run"
+namespace :watch do
+  desc "run the ruby script in entr"
+  task :ruby do
+    sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
+  end
+  desc "run the elixir script in entr"
+  task :elixir do
+    sh "ls #{config['directory']}/*.exs | entr -r elixir #{config['elixir']}"
+  end
 end
 
 desc "run rspec in entr"
@@ -43,7 +53,7 @@ end
 desc "run the default script in a benchmark"
 task time: ["time:ruby"]
 
-desc "run benchmark on ruby script defined in config"
+desc "timed script run"
 namespace :time do
   desc "run the ruby script in a benchmark"
   task :ruby do

@@ -1,40 +1,22 @@
 require_relative '../../lib/advent_helper'
-helper = AdventHelper.new(script_root:__dir__)
-input = helper.line_separated_strings('input.txt').map { |line| line.split('') }
-# input = helper.comma_separated_strings('input.txt')
-
-
+helper = AdventHelper.new(script_root:__dir__, script_file: __FILE__)
+input = helper.line_separated_strings('input.txt')
 
 # Part 1
-x = 0
-y = 0
+# 244
 width = input.first.length
-
-count = 0
-while y < input.length
-  count += input[y][x] == '#' ? 1 : 0
-  y += 1
-  x = (x + 3) % width
-end
-a = count
-
-def risk(right, down, input)
-  x = 0
-  y = 0
-  width = input.first.length
-
-  count = 0
-  while y < input.length
-    count += input[y][x] == '#' ? 1 : 0
-    y += down
-    x = (x + right) % width
-  end
-  a = count
-end
+a = (0...input.length).count { |y| input[y][(y * 3) % width] == '#' }
 
 # Part 2
-b =[[1,1], [3,1], [5,1], [7,1], [1,2]].map { |right, down| risk(right,down,input) } .reduce(&:*)
-
-
+# 9406609920
+vectors = [[1,1], [3,1], [5,1], [7,1], [1,2]]
+counts = vectors.map do |right, down|
+  (0...input.length/down).count do |y|
+    dy = down * y
+    dx = y * right % width
+    input[dy][dx] == '#'
+  end
+end
+b = counts.reduce(&:*)
 
 helper.output(a, b)
