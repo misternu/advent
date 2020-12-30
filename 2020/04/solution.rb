@@ -16,6 +16,7 @@ requirements = %w[
   # cid
 
 # Part 1
+# 245
 a = passports.count do |passport|
   requirements.all? do |requirement|
     passport.map { |part| part.split(':').first } .include?(requirement)
@@ -23,6 +24,7 @@ a = passports.count do |passport|
 end
 
 # Part 2
+# 133
 full_requirements = {
   byr: -> (string) { string.length == 4 && string.to_i >= 1920 && string.to_i <= 2002  },
   iyr: -> (string) { string.length == 4 && string.to_i >= 2010 && string.to_i <= 2020  },
