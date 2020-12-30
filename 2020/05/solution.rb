@@ -21,12 +21,14 @@ input = helper.auto_parse
 
 # Rewrite
 row_ids = input.map do |line|
- line.split('').map { |c| ["B", "R"].include?(c) ? '1' : '0' }.join.to_i(2)
+  line.split('').map { |c| ["B", "R"].include?(c) ? '1' : '0' }.join.to_i(2)
 end
 # Part 1
+# 998
 a = row_ids.max
 
 # Part 2
+# 676
 b = (row_ids.min..row_ids.max).sum - row_ids.sum
 
 
