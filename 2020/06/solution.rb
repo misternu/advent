@@ -6,9 +6,11 @@ responses = input.split("\n\n").map { |r| r.split(/\s+/).map(&:chars) }
 
 
 # Part 1
+# 6310
 a = responses.sum { |r| r.inject(&:|).count }
 
 # Part 2
+# 3193
 b = responses.sum { |r| r.inject(&:&).count }
 
 
