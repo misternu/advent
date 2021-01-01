@@ -1,5 +1,5 @@
 require_relative '../../lib/advent_helper'
-helper = AdventHelper.new(script_root:__dir__)
+helper = AdventHelper.new(script_root:__dir__, script_file: __FILE__)
 input = helper.send(:open_file, 'input.txt').read
 passports = input.split("\n\n")
 passports.map! { |passport| passport.split(/\s+/) }
