@@ -34,6 +34,7 @@ task watch: ["watch:ruby"]
 
 desc "watched script run"
 namespace :watch do
+  # TODO add error handling for when entr is not installed
   desc "run the ruby script in entr"
   task :ruby do
     sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
