@@ -101,31 +101,48 @@ end
   end
 end
 
+
 # Postulate 1: two deals cancel out
-(0..9).each do |i|
-  unless full_solve(["deal with increment 7"], 10, i) == example_1_solutions.find_index(i)
-    puts "postulate 1 fails for index #{i}"
-  end
-end
+# example_1 = [
 
-# Postulate 2: two successive deals with increment can be multiplied
-new_example_3 = [
-  "deal with increment 63",
-  "cut -2"
-]
-(0..9).each do |i|
-  unless full_solve(new_example_3, 10, i) == example_3_solutions.find_index(i)
-    puts "postulate 2 fails for index #{i}"
-  end
-end
+#   "deal with increment 7",
+#   "deal into new stack",
+#   "deal into new stack",
+# ]
+# (0..9).each do |i|
+#   unless full_solve(["deal with increment 7"], 10, i) == example_1_solutions.find_index(i)
+#     puts "postulate 1 fails for index #{i}"
+#   end
+# end
 
-# Also if multiplied increment modulo length
-new_example_3_simplified = [
-  "deal with increment 3",
-  "cut -2"
-]
-(0..9).each do |i|
-  unless full_solve(new_example_3_simplified, 10, i) == example_3_solutions.find_index(i)
-    puts "postulate 2 fails for index #{i}"
-  end
-end
+# # Postulate 2: two successive deals with increment can be multiplied
+# example_3 = [
+#   "deal with increment 7",
+#   "deal with increment 9",
+#   "cut -2",
+# ]
+# new_example_3 = [
+#   "deal with increment 63",
+#   "cut -2"
+# ]
+# (0..9).each do |i|
+#   unless full_solve(new_example_3, 10, i) == example_3_solutions.find_index(i)
+#     puts "postulate 2 fails for index #{i}"
+#   end
+# end
+
+# # Also if (n * m) % length, correlary to postulate 2
+# example_3 = [
+#   "deal with increment 7",
+#   "deal with increment 9",
+#   "cut -2",
+# ]
+# new_example_3_simplified = [
+#   "deal with increment 3",
+#   "cut -2"
+# ]
+# (0..9).each do |i|
+#   unless full_solve(new_example_3_simplified, 10, i) == example_3_solutions.find_index(i)
+#     puts "postulate 2 fails for index #{i}"
+#   end
+# end

@@ -50,6 +50,12 @@ task :spec_watch do
   sh "ls **/*.rb | entr -r rspec spec"
 end
 
+desc "run solution spec in entr"
+task :spec_solution do
+  p config['directory']
+  sh "ls #{config['directory']}*.rb | entr -r rspec #{config['directory']}"
+end
+
 # Run Benchmarks
 desc "run the default script in a benchmark"
 task time: ["time:ruby"]
