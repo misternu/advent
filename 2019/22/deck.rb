@@ -19,11 +19,24 @@ class Deck
     end
   end
 
+  def lcm(x, y)
+    d = gcd(x, y)
+    (x / d) * y
+  end
+
+  def gcd(x, y)
+    return gcd(y, x) if y > x
+    return x if y == 0
+    a = y
+    b = x % y
+    gcd(a, b)
+  end
+
   def index_of(n)
     ((n * @increment) + @offset) % @length
   end
 
   def number_at(i)
-    raise NoMethodError
+    ((i - @offset) % length) * lcm(@increment, length + 1) % length
   end
 end

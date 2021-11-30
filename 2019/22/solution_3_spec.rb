@@ -71,6 +71,12 @@ describe Deck do
       end
     end
   end
+
+  describe '#gcd' do
+    it 'gets the greatest common divisor' do
+      expect(Deck.new(10).gcd(270, 192)).to eq 6
+    end
+  end
 end
 
 describe InstructionParser do

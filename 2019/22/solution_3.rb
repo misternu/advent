@@ -14,6 +14,7 @@ n = 2019
 deck = Deck.new(length)
 deck.apply_all(instructions)
 a = deck.index_of(n)
+p deck.number_at(a)
 
 # part 2
 length = 119315717514047
@@ -22,6 +23,6 @@ i = 2020
 
 increment, offset = InstructionParser.repeat(input, repetitions, length: length)
 deck = Deck.new(length, increment: increment, offset: offset)
-
+p increment
 
 helper.output(a, nil)
