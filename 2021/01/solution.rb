@@ -6,7 +6,6 @@ input = helper.auto_parse
 a = (0..input.length-2).count { |i| input[i] < input[i+1] }
 
 # Part 2
-sliding = (0..input.length-3).map { |i| input[i..(i+2)].reduce(&:+) }
-b = (0..sliding.length-2).count { |i| sliding[i] < sliding[i+1] }
+b = (0..input.length-4).count { |i| input[i] < input[i+3] }
 
 helper.output(a, b)
