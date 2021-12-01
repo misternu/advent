@@ -19,4 +19,4 @@ while true
   end
 end
 
-system("curl --cookie \"session=$(cat ${HOME}/.aocrc)\" https://adventofcode.com/#{year}/day/#{day}/input > #{target}")
+system("curl --cookie \"$(cat ${HOME}/.aocrc)\" https://adentofcode.com/#{year}/day/#{day}/input > #{target}")

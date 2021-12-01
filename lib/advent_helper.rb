@@ -41,6 +41,10 @@ class AdventHelper
   end
 
   def auto_parse(file = 'input.txt', options = {})
+    unless File.exist?(file_path(file))
+      puts 'no input file'
+      return
+    end
     AutoParser.parse(File.open(file_path(file)).readlines, options)
   end
 
