@@ -1,5 +1,3 @@
-IEx.Helpers.clear
-
 input = __DIR__ <> "/" <> "input.txt"
   |> File.read!()
   |> String.split("\n", trim: true)
@@ -15,5 +13,5 @@ input
 
 input
   |> Enum.chunk_every(4, 1, :discard)
-  |> Enum.count(fn [a, b, c, d] -> a < d end)
+  |> Enum.count(fn [a, _, _, d] -> a < d end)
   |> IO.inspect
