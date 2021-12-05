@@ -23,75 +23,35 @@ end
 covered = Hash.new(0)
 input.each do |a, b|
   if a.first == b.first
-    if a.last < b.last
-      (a.last..b.last).each do |y|
-        covered[[a.first, y]] += 1
-      end
-    else
-      (b.last..a.last).each do |y|
-        covered[[a.first, y]] += 1
-      end
-    end
+    x_incr = 0
+    y_incr = a.last > b.last ? -1 : 1
+    distance = (a.last-b.last).abs
   elsif a.last == b.last
-    if a.first < b.first
-      (a.first..b.first).each do |x|
-        covered[[x, a.last]] += 1
-      end
-    else
-      (b.first..a.first).each do |x|
-        covered[[x, a.last]] += 1
-      end
-    end
+    x_incr = a.first > b.first ? -1 : 1
+    y_incr = 0
+    distance = (a.first-b.first).abs
+  else
+    next
+  end
+  (0..distance).each do |offset|
+    covered[[a.first + (offset * x_incr), a.last + (offset * y_incr)]] += 1
   end
 end
-a = covered.values.count { |n| n != 1}
+a = covered.values.count { |n| n != 1 }
 
 # Part 2
-covered = Hash.new(0)
 input.each do |a, b|
   if a.first == b.first
-    if a.last < b.last
-      (a.last..b.last).each do |y|
-        covered[[a.first, y]] += 1
-      end
-    else
-      (b.last..a.last).each do |y|
-        covered[[a.first, y]] += 1
-      end
-    end
+    next
   elsif a.last == b.last
-    if a.first < b.first
-      (a.first..b.first).each do |x|
-        covered[[x, a.last]] += 1
-      end
-    else
-      (b.first..a.first).each do |x|
-        covered[[x, a.last]] += 1
-      end
-    end
+    next
   else
-    distance = (a.first - b.first).abs
-    if a.first < b.first
-      if a.last < b.last
-        (0..distance).each do |offset|
-          covered[[a.first + offset, a.last + offset]] += 1
-        end
-      else
-        (0..distance).each do |offset|
-          covered[[a.first + offset, a.last - offset]] += 1
-        end
-      end
-    else
-      if a.last < b.last
-        (0..distance).each do |offset|
-          covered[[a.first - offset, a.last + offset]] += 1
-        end
-      else
-        (0..distance).each do |offset|
-          covered[[a.first - offset, a.last - offset]] += 1
-        end
-      end
-    end
+    x_incr = a.first > b.first ? -1 : 1
+    y_incr = a.last > b.last ? -1 : 1
+    distance = (a.first-b.first).abs
+  end
+  (0..distance).each do |offset|
+    covered[[a.first + (offset * x_incr), a.last + (offset * y_incr)]] += 1
   end
 end
 b = covered.values.count { |n| n != 1 }
