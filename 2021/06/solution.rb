@@ -9,18 +9,10 @@ sample_input = "3,4,3,1,2".split(',').map(&:to_i)
 # Part 1
 fish = input.dup
 80.times do
-  fish_spawn = 0
-  new_fish = fish.map do |f|
-    if f == 0
-      fish_spawn += 1
-      6
-    else
-      f - 1
-    end
-  end
-  fish = new_fish + [8] * fish_spawn
+  fish_spawn = fish.count(0)
+  fish.map! { |n| n == 0 ? 6 : n - 1 }
+  fish.concat(Array.new(fish_spawn, 8))
 end
-
 a = fish.length
 
 # Part 2
