@@ -1,3 +1,4 @@
 .advent_config.yml
 .DS_Store
 .ruby-version
+stats.json
