@@ -78,13 +78,17 @@ desc "create solution file from template and set in config"
 task :create, [:directory] do |t, args|
   directory = args[:directory]
   mkdir_p directory
-  ruby_path = "#{directory}/solution.rb"
-  elixir_path = "#{directory}/elixir.exs"
+  ruby_path         = "#{directory}/solution.rb"
+  elixir_path       = "#{directory}/elixir.exs"
+  input_path        = "#{directory}/input.txt"
+  sample_input_path = "#{directory}/sample_input.txt"
   unless File.exists?(ruby_path)
     cp 'lib/template.rb', ruby_path
   end
-  unless File.exists?(elixir_path)
-    sh "touch #{elixir_path}"
+  [elixir_path, input_path, sample_input_path].each do |path|
+    unless File.exists?(path)
+      sh "touch #{path}"
+    end
   end
   File.open('.advent_config.yml', 'w') do |file|
     file.write("directory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
