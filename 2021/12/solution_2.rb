@@ -6,37 +6,36 @@ sample_input = helper.line_separated_strings('sample_input.txt')
 # MemoryProfiler.start(allow_files: __FILE__)
 # input = sample_input
 
+# Part 2
 neighbors = Hash.new { |h, k| h[k] = [] }
 input.each do |line|
   a, b = line.split('-').map(&:to_sym)
-  neighbors[a] << b
-  neighbors[b] << a
+  if b != :start && a != :end
+    neighbors[a] << b
+  end
+  if a != :start && b != :end
+    neighbors[b] << a
+  end
 end
-UPPER = /[[:upper:]]/
+
 LOWER = /[[:lower:]]/
-# Part 2
+
 def can_go(path, pos)
-  return false if pos == :start
-  return true if pos == :end
-  return true if path[pos] == 0
-  return true unless path.has_value?(2)
-  false
+  path[pos] == 0 || !path.has_value?(2)
 end
+
 count = 0
 start_path = Hash.new(0)
 start_path[:pos] = :start
 paths = [start_path]
 until paths.empty?
   path = paths.shift
-  if path[:pos] == :end
-    count += 1
-    next
-  end
+  count += 1 if path[:pos] == :end
   neighbors[path[:pos]].each do |choice|
     next unless can_go(path, choice)
     new_path = path.dup
     new_path[:pos] = choice
-    if LOWER =~ choice
+    if LOWER.match?(choice)
       new_path[choice] += 1
     end
     paths << new_path
