@@ -6,7 +6,7 @@ sample_1 = "D2FE28"
 sample_2 = "38006F45291200"
 sample_3 = "EE00D40C823060"
 # MemoryProfiler.start(allow_files: __FILE__)
-# input = sample_3
+input = sample_3
 hexes = {
   "0" => "0000",
   "1" => "0001",
@@ -89,7 +89,7 @@ def sum_versions(data)
   return data[:version] if data[:body].is_a?(Integer)
   data[:version] + data[:body].sum { |d| sum_versions(d) }
 end
-data = parse(bits)
+p data = parse(bits)
 a = sum_versions(data)
 
 # Part 2

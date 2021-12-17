@@ -53,7 +53,13 @@ end
 desc "run solution spec in entr"
 task :spec_solution do
   p config['directory']
-  sh "ls #{config['directory']}*.rb | entr -r rspec #{config['directory']}"
+  sh "ls #{config['directory']}/*.rb | entr -r rspec #{config['directory']}"
+end
+
+desc "run year spec in entr"
+task :spec_year do
+  p config['year']
+  sh "ls #{config['year']}/lib/*.rb | entr -r rspec #{config['year']}/spec"
 end
 
 # Run Benchmarks
@@ -77,6 +83,7 @@ end
 desc "create solution file from template and set in config"
 task :create, [:directory] do |t, args|
   directory = args[:directory]
+  year = args[:directory].split("/").first
   mkdir_p directory
   ruby_path         = "#{directory}/solution.rb"
   elixir_path       = "#{directory}/elixir.exs"
@@ -91,6 +98,6 @@ task :create, [:directory] do |t, args|
     end
   end
   File.open('.advent_config.yml', 'w') do |file|
-    file.write("directory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
+    file.write("year: '#{year}'\ndirectory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
   end
 end
