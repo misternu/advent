@@ -29,7 +29,7 @@ def print_image(data)
   y_min = y_coords.min - 1
   y_max = y_coords.max + 1
   (y_min..y_max).each do |y|
-    puts (x_min..x_max).map { |x| data[[x,y]] == "1" ? "#" : '.' }.join
+    puts (x_min..x_max).map { |x| (data[[x,y]] || data[:infinite]) == "1" ? "#" : "." } .join
   end
 end
 
@@ -67,6 +67,18 @@ def enhance_image(data, algorithm)
   elsif data[:infinite] == "1"
     new_data[:infinite] = algorithm[511] ? "1" : "0"
   end
+  while (x_min..x_max).map { |x| [x, y_min] } .all? { |pos| new_data[pos] == new_data[:infinite] }
+    (x_min..x_max).map { |x| [x, y_min] } .each { |pos| new_data.delete(pos) }
+    y_min += 1
+  end
+  while (y_min..y_max).map { |y| [x_min, y] } .all? { |pos| new_data[pos] == new_data[:infinite] }
+    (y_min..y_max).map { |y| [x_min, y] } .each { |pos| new_data.delete(pos) }
+    x_min += 1
+  end
+  while (y_min..y_max).map { |y| [x_max, y] } .all? { |pos| new_data[pos] == new_data[:infinite] }
+    (y_min..y_max).map { |y| [x_max, y] } .each { |pos| new_data.delete(pos) }
+    x_max -= 1
+  end
   new_data
 end
 2.times do
@@ -78,7 +90,7 @@ a = image.values.count("1")
 48.times do
   image = enhance_image(image, algorithm)
 end
-# print_image(image)
+print_image(image)
 b = image.values.count("1")
 
 
