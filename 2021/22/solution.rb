@@ -6,54 +6,55 @@ sample_input = helper.line_separated_strings('sample_input.txt')
 # MemoryProfiler.start(allow_files: __FILE__)
 # input = sample_input
 input.map! { |l| l.split(' ') }
-input.map! { |a, b| [a] + b.split(',').map { |r| r[2..-1].split('..').map(&:to_i) } }
+input.map! { |a, b| [a.to_sym, b.split(',').map { |r| r[2..-1].split('..').map(&:to_i) }] }
 
 
 
-# Part 1
-values = Hash.new
-input.each do |value, x_values, y_values, z_values|
-  x_range = ([x_values.first, -50].max..[x_values.last, 50].min)
-  y_range = ([y_values.first, -50].max..[y_values.last, 50].min)
-  z_range = ([z_values.first, -50].max..[z_values.last, 50].min)
-  x_range.each do |x|
-    y_range.each do |y|
-      z_range.each do |z|
-        values[[x,y,z]] = value == "on"
-      end
-    end
-  end
-end
-a = (-50..50).sum do |x|
-  (-50..50).sum do |y|
-    (-50..50).count do |z|
-      values[[x,y,z]]
-    end
-  end
-end
-
-# Part 2
 def overlap(a_ranges, b_ranges)
-  (0..2).map do |i|
-    a_range = a_ranges[i]
-    b_range = b_ranges[i]
-    return false if a_range.last < b_range.first
-    return false if b_range.last < a_range.first
+  (0...a_ranges.length).map do |i|
+    return false if a_ranges[i][1] < b_ranges[i][0]
+    return false if b_ranges[i][1] < a_ranges[i][0]
     [
-      a_range.first > b_range.first ? a_range.first : b_range.first,
-      a_range.last < b_range.last ? a_range.last : b_range.last
+      a_ranges[i][0] > b_ranges[i][0] ? a_ranges[i][0] : b_ranges[i][0],
+      a_ranges[i][1] < b_ranges[i][1] ? a_ranges[i][1] : b_ranges[i][1]
     ]
   end
 end
 
 def volume(ranges)
-  ranges.reduce(1) { |product, pair| product * (pair.last-pair.first+1) } 
+  ranges.reduce(1) { |product, pair| product * (pair[1]-pair[0]+1) } 
 end
 
+
+
+# Part 1
+init_range_boundary = (0...input[0][1].length).map { |x| [-50, 50] }
 volumes = []
 total = 0
-input.each do |value, x, y, z|
-  ranges = [x, y, z]
+input.each do |value, ranges|
+  init_ranges = overlap(ranges, init_range_boundary)
+  next unless init_ranges
+  new_volumes = []
+  volumes.each do |v_sign, v_ranges|
+    if lap = overlap(init_ranges, v_ranges)
+      new_volumes << [-v_sign, lap]
+      total += volume(lap) * -v_sign
+    end
+  end
+  if value == :on
+    new_volumes << [1, ranges]
+    total += volume(ranges)
+  end
+  volumes.concat(new_volumes)
+end
+a = total
+
+
+
+# Part 2
+volumes = []
+total = 0
+input.each do |value, ranges|
   new_volumes = []
   volumes.each do |v_sign, v_ranges|
     if lap = overlap(ranges, v_ranges)
@@ -61,7 +62,7 @@ input.each do |value, x, y, z|
       total += volume(lap) * -v_sign
     end
   end
-  if value == "on"
+  if value == :on
     new_volumes << [1, ranges]
     total += volume(ranges)
   end
