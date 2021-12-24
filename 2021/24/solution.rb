@@ -7,7 +7,7 @@ helper = AdventHelper.new(script_root:__dir__)
 input = helper.auto_parse
 sample_input = helper.auto_parse('sample_input.txt')
 # MemoryProfiler.start(allow_files: __FILE__)
-input = sample_input
+# input = sample_input
 
 
 
@@ -216,6 +216,7 @@ class MonadChecker
   end
 end
 
+p ALUComputer.run(input, [3] * 14)[:z]
 
 # Part 1
 # a = nil
@@ -227,75 +228,75 @@ end
 #   end
 # end
 
-first_four = []
-(1..9).to_a.repeated_permutation(4).each do |input_array|
-  output = MonadChecker.run(input_array.dup)
-  if output < 10000
-    first_four << input_array
-  end
-end
-first_eight = []
-first_four.each do |less|
-  (1..9).to_a.repeated_permutation(4).each do |more|
-    input_array = less + more
-    output = MonadChecker.run(input_array.dup)
-    if output < 100000000
-      first_eight << input_array
-    end
-  end
-end
-first_nine = []
-first_eight.each do |less|
-  (1..9).each do |digit|
-    input_array = less + [digit]
-    output = MonadChecker.run(input_array.dup)
-    if output < 100000
-      first_nine << input_array
-    end
-  end
-end
-first_eleven = []
-first_nine.each do |less|
-  (1..9).to_a.repeated_permutation(2).each do |more|
-    input_array = less + more
-    output = MonadChecker.run(input_array.dup)
-    if output < 10000
-      first_eleven << input_array
-    end
-  end
-end
-first_twelve = []
-first_eleven.each do |less|
-  (1..9).each do |digit|
-    input_array = less + [digit]
-    output = MonadChecker.run(input_array.dup)
-    if output < 1000
-      first_twelve << input_array
-    end
-  end
-end
-first_thirteen = []
-first_twelve.each do |less|
-  (1..9).each do |digit|
-    input_array = less + [digit]
-    output = MonadChecker.run(input_array.dup)
-    if output < 100
-      first_thirteen << input_array
-    end
-  end
-end
-first_fourteen = []
-first_thirteen.each do |less|
-  (1..9).each do |digit|
-    input_array = less + [digit]
-    p output = MonadChecker.run(input_array.dup)
-    if output == 0
-      first_fourteen << input_array
-    end
-  end
-end
-a = first_fourteen.map { |ia| ia.map(&:to_s).join.to_i } .max
-
+# first_four = []
+# (1..9).to_a.repeated_permutation(4).each do |input_array|
+#   output = MonadChecker.run(input_array.dup)
+#   if output < 10000
+#     first_four << input_array
+#   end
+# end
+# first_eight = []
+# first_four.each do |less|
+#   (1..9).to_a.repeated_permutation(4).each do |more|
+#     input_array = less + more
+#     output = MonadChecker.run(input_array.dup)
+#     if output < 100000000
+#       first_eight << input_array
+#     end
+#   end
+# end
+# first_nine = []
+# first_eight.each do |less|
+#   (1..9).each do |digit|
+#     input_array = less + [digit]
+#     output = MonadChecker.run(input_array.dup)
+#     if output < 100000
+#       first_nine << input_array
+#     end
+#   end
+# end
+# first_eleven = []
+# first_nine.each do |less|
+#   (1..9).to_a.repeated_permutation(2).each do |more|
+#     input_array = less + more
+#     output = MonadChecker.run(input_array.dup)
+#     if output < 10000
+#       first_eleven << input_array
+#     end
+#   end
+# end
+# first_twelve = []
+# first_eleven.each do |less|
+#   (1..9).each do |digit|
+#     input_array = less + [digit]
+#     output = MonadChecker.run(input_array.dup)
+#     if output < 1000
+#       first_twelve << input_array
+#     end
+#   end
+# end
+# first_thirteen = []
+# first_twelve.each do |less|
+#   (1..9).each do |digit|
+#     input_array = less + [digit]
+#     output = MonadChecker.run(input_array.dup)
+#     if output < 100
+#       first_thirteen << input_array
+#     end
+#   end
+# end
+# first_fourteen = []
+# first_thirteen.each do |less|
+#   (1..9).each do |digit|
+#     input_array = less + [digit]
+#     p output = MonadChecker.run(input_array.dup)
+#     if output == 0
+#       first_fourteen << input_array
+#     end
+#   end
+# end
+# a = first_fourteen.map { |ia| ia.map(&:to_s).join.to_i } .max
+a = nil
 
 
 # set z to input + 8
