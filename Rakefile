@@ -16,17 +16,22 @@ end
 # Run Scripts
 desc "run script defined in config"
 task :default do
-  sh "ruby #{config['ruby']}"
+  sh "ruby #{config['directory']}#{config['ruby']}"
 end
 
 task "run ruby script defined in config"
 task :ruby do
-  sh "ruby #{config['ruby']}"
+  sh "ruby #{config['directory']}#{config['ruby']}"
 end
 
 desc "run elixir script defined in config"
 task :elixir do
-  sh "elixir #{config['elixir']}"
+  sh "elixir #{config['directory']}#{config['elixir']}"
+end
+
+desc "run golang script defined in config"
+task :golang do
+  sh "go run #{config['directory']}#{config['golang']}"
 end
 
 desc "run the default script in entr"
@@ -70,12 +75,12 @@ desc "timed script run"
 namespace :time do
   desc "run the ruby script in a benchmark"
   task :ruby do
-    sh "time ruby #{config['ruby']}"
+    sh "time ruby #{config['directory']}#{config['ruby']}"
   end
 
   desc "run the elixir script in a benchmark"
   task :elixir do
-    sh "time elixir #{config['elixir']}"
+    sh "time elixir #{config['directory']}#{config['elixir']}"
   end
 end
 
@@ -85,8 +90,9 @@ task :create, [:directory] do |t, args|
   directory = args[:directory]
   year = args[:directory].split("/").first
   mkdir_p directory
-  ruby_path         = "#{directory}/solution.rb"
-  elixir_path       = "#{directory}/elixir.exs"
+  ruby_filename     = "solution.rb"
+  elixir_filename   = "elixir.exs"
+  golang_filename   = "solution.go"
   input_path        = "#{directory}/input.txt"
   sample_input_path = "#{directory}/sample_input.txt"
   unless File.exists?(ruby_path)
@@ -98,6 +104,6 @@ task :create, [:directory] do |t, args|
     end
   end
   File.open('.advent_config.yml', 'w') do |file|
-    file.write("year: '#{year}'\ndirectory: #{directory}\nruby: #{ruby_path}\nelixir: #{elixir_path}")
+    file.write("year: '#{year}'\ndirectory: #{directory}/\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
   end
 end
