@@ -89,21 +89,20 @@ desc "create solution file from template and set in config"
 task :create, [:directory] do |t, args|
   directory = args[:directory]
   year = args[:directory].split("/").first
-  mkdir_p directory
   ruby_filename     = "solution.rb"
-  elixir_filename   = "elixir.exs"
+  elixir_filename   = "solution.exs"
   golang_filename   = "solution.go"
-  input_path        = "#{directory}/input.txt"
-  sample_input_path = "#{directory}/sample_input.txt"
-  unless File.exists?(ruby_path)
-    cp 'lib/template.rb', ruby_path
+  input_filename    = "input.txt"
+  sample_filename   = "sample_input.txt"
+  unless File.exists?("#{directory}#{ruby_filename}")
+    cp 'lib/template.rb', "#{directory}#{ruby_filename}"
   end
-  [elixir_path, input_path, sample_input_path].each do |path|
-    unless File.exists?(path)
-      sh "touch #{path}"
+  [elixir_filename, golang_filename, input_filename, sample_filename].each do |filename|
+    unless File.exists?("#{directory}#{filename}")
+      sh "touch #{directory}#{filename}"
     end
   end
   File.open('.advent_config.yml', 'w') do |file|
-    file.write("year: '#{year}'\ndirectory: #{directory}/\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
+    file.write("year: '#{year}'\ndirectory: #{directory}\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
   end
 end
