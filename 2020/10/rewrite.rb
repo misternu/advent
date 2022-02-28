@@ -37,7 +37,6 @@ while true
     break
   end
 end
-
 p groups.map { |n| paths[n] } .reduce(&:*)
 
 
