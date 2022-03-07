@@ -9,30 +9,23 @@ input = helper.line_separated_strings('input.txt')
 
 
 # Part 1
-outside = Hash.new([])
-
+outside = Hash.new { |h, k| h[k] = [] }
 input.each do |sentence|
   outer_bag = sentence.match(/^(.*) bags contain/)[1]
-  inner_bags = sentence.scan(/(contain|,) (.*? bag)/).map { |pair| pair.last }
-  inner_bags.map! { |cont| cont.match(/\d* (.*) bag/)[1] }
-  inner_bags.each do |inner|
-    outside[inner] += [outer_bag]
+  sentence.scan(/(?:contain|,) \d* (.*?) bag/).each do |inner|
+    outside[inner[0]] << outer_bag
   end
 end
 
-colors = ["shiny gold"]
+colors = []
+queue = outside["shiny gold"]
 
-while true
-  new_colors = colors
-  colors.each do |color|
-    new_colors = (new_colors + outside[color]).uniq
-  end
-  if colors.length == new_colors.length
-    break
-  end
-  colors = new_colors
+while queue.any?
+  colors << queue.shift
+  queue.concat(outside[colors.last])
 end
-a = colors.length - 1
+
+a = colors.uniq.length
 
 # Part 2
 inside = Hash.new([])
