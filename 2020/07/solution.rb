@@ -13,7 +13,7 @@ outside = Hash.new { |h, k| h[k] = [] }
 input.each do |sentence|
   outer_bag = sentence.match(/^(.*) bags contain/)[1]
   sentence.scan(/(?:contain|,) \d* (.*?) bag/).each do |inner|
-    outside[inner[0]] << outer_bag
+    outside[inner.first] << outer_bag
   end
 end
 
@@ -21,8 +21,10 @@ colors = []
 queue = outside["shiny gold"]
 
 while queue.any?
-  colors << queue.shift
-  queue.concat(outside[colors.last])
+  color = queue.shift
+  colors << color
+  outer_bags = outside[color]
+  queue.concat(outer_bags)
 end
 
 a = colors.uniq.length
