@@ -12,8 +12,8 @@ input = helper.line_separated_strings('input.txt')
 outside = Hash.new { |h, k| h[k] = [] }
 input.each do |sentence|
   outer_bag = sentence.match(/^(.*) bags contain/)[1]
-  sentence.scan(/(?:contain|,) \d* (.*?) bag/).each do |inner|
-    outside[inner.first] << outer_bag
+  sentence.scan(/(?:contain|,) \d* (.*?) bag/).map(&:first).each do |inner|
+    outside[inner] << outer_bag
   end
 end
 
@@ -30,17 +30,14 @@ end
 a = colors.uniq.length
 
 # Part 2
-inside = Hash.new([])
-
+inside = Hash.new { |h, k| h[k] = [] }
 input.each do |sentence|
   outer_bag = sentence.match(/^(.*) bags contain/)[1]
-  inner_bags = sentence.scan(/(contain|,) (.*? bag)/).map { |pair| pair.last }
-  if inner_bags.first != 'no other bag'
-    inner_bags.map! { |b| b.match(/(\d+) (.*) bag/)[1..2] }
-    inner_bags.each do |inner|
-      number, color = inner.first.to_i, inner.last
-      inside[outer_bag] += [[number, color]]
-    end
+  inner_bags = sentence.scan(/(?:contain|,) (.*? bag)/).map(&:first)
+  next if inner_bags[0] == 'no other bag'
+  inner_bags.each do |string|
+    number, color = string.match(/(\d+) (.*) bag/)[1..2]
+    inside[outer_bag] << [number.to_i, color]
   end
 end
 
@@ -50,12 +47,17 @@ queue = [[1, "shiny gold"]]
 
 while queue.length > 0
   bag = queue.shift
-  inventory[bag.last] += bag.first
-  insides = inside[bag.last].map { |i| [i.first * bag.first, i.last] }
-  queue += insides
+  c, color = bag
+  inventory[color] += c
+  inside[color].each do |inside_bag|
+    amount, color = inside_bag
+    queue << [c * amount, color]
+  end
 end
 
-b = inventory.values.sum - 1
+inventory["shiny gold"] = 0
+
+b = inventory.values.sum
 
 
 
