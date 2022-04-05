@@ -94,15 +94,15 @@ task :create, [:directory] do |t, args|
   golang_filename   = "solution.go"
   input_filename    = "input.txt"
   sample_filename   = "sample_input.txt"
-  unless File.exists?("#{directory}#{ruby_filename}")
-    cp 'lib/template.rb', "#{directory}#{ruby_filename}"
+  unless File.exists?("#{directory}/#{ruby_filename}")
+    cp 'lib/template.rb', "#{directory}/#{ruby_filename}"
   end
   [elixir_filename, golang_filename, input_filename, sample_filename].each do |filename|
-    unless File.exists?("#{directory}#{filename}")
-      sh "touch #{directory}#{filename}"
+    unless File.exists?("#{directory}/#{filename}")
+      sh "touch #{directory}/#{filename}"
     end
   end
   File.open('.advent_config.yml', 'w') do |file|
-    file.write("year: '#{year}'\ndirectory: #{directory}\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
+    file.write("year: '#{year}'\ndirectory: #{directory}/\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
   end
 end
