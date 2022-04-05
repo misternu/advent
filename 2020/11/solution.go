@@ -7,7 +7,23 @@ import (
 	"strings"
 )
 
-func readInput() (map[int]bool, map[int][]int) {
+func lineOfSight(seat_map map[int]bool, x int, y int, direction []int, width int, height int) int {
+	dx := direction[0]
+	dy := direction[1]
+	nx := x + dx
+	ny := y + dy
+	for nx >= 0 && ny >= 0 && nx < width && ny < height {
+		key := ny*width + nx
+		if _, ok := seat_map[key]; ok {
+			return key
+		}
+		nx = nx + dx
+		ny = ny + dy
+	}
+	return -1
+}
+
+func readInput() (map[int]bool, map[int][]int, map[int][]int) {
 	input, err := ioutil.ReadFile("2020/11/input.txt")
 	if err != nil {
 		panic(err)
@@ -32,12 +48,15 @@ func readInput() (map[int]bool, map[int][]int) {
 	height := y
 
 	neighbors := make(map[int][]int)
+	distant_neighbors := make(map[int][]int)
 
 	directions := [][]int{[]int{0, -1}, []int{1, -1}, []int{1, 0}, []int{1, 1}, []int{0, 1}, []int{-1, 1}, []int{-1, 0}, []int{-1, -1}}
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			if _, ok := seat_map[(y*width)+x]; ok {
+			key := (y * width) + x
+			if _, ok := seat_map[key]; ok {
 				var p_neighbors []int
+				var d_neighbors []int
 				for _, pair := range directions {
 					dx := pair[0]
 					dy := pair[1]
@@ -46,20 +65,25 @@ func readInput() (map[int]bool, map[int][]int) {
 					if nx < 0 || ny < 0 || nx >= width || ny >= height {
 						continue
 					}
-					key := (ny * width) + nx
-					if _, n_ok := seat_map[key]; n_ok {
-						p_neighbors = append(p_neighbors, key)
+					p_key := (ny * width) + nx
+					if _, n_ok := seat_map[p_key]; n_ok {
+						p_neighbors = append(p_neighbors, p_key)
+					}
+					d_key := lineOfSight(seat_map, x, y, pair, width, height)
+					if d_key >= 0 {
+						d_neighbors = append(d_neighbors, d_key)
 					}
 				}
-				neighbors[y*width+x] = p_neighbors
+				neighbors[key] = p_neighbors
+				distant_neighbors[key] = d_neighbors
 			}
 		}
 	}
 
-	return seat_map, neighbors
+	return seat_map, neighbors, distant_neighbors
 }
 
-func run(seat_map map[int]bool, neighbors map[int][]int) int {
+func run(seat_map map[int]bool, neighbors map[int][]int, threshold int) int {
 	previous_map := seat_map
 	running := true
 	var new_map map[int]bool
@@ -75,7 +99,7 @@ func run(seat_map map[int]bool, neighbors map[int][]int) int {
 				}
 			}
 			if previous_map[k] {
-				new_map[k] = count < 4
+				new_map[k] = count < threshold
 			} else {
 				new_map[k] = count == 0
 			}
@@ -95,9 +119,11 @@ func run(seat_map map[int]bool, neighbors map[int][]int) int {
 }
 
 func main() {
-	seat_map, neighbors := readInput()
+	seat_map, neighbors, distant_neighbors := readInput()
 
-	part_one := run(seat_map, neighbors)
+	part_one := run(seat_map, neighbors, 4)
+	part_two := run(seat_map, distant_neighbors, 5)
 
 	fmt.Println(part_one)
+	fmt.Println(part_two)
 }
