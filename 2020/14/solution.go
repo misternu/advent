@@ -67,7 +67,45 @@ func runOne(instructions []instruction) int {
 	return total
 }
 
+func runTwo(instructions []instruction) int {
+	memory := make(map[int]int)
+	for _, instr := range instructions {
+		masked_addr_strings := []string{""}
+		addr_string := fmt.Sprintf("%036b", instr.ints[0])
+		for i := 0; i < 36; i++ {
+			switch instr.mask[i] {
+			case '0':
+				char := string(addr_string[i])
+				for j := 0; j < len(masked_addr_strings); j++ {
+					masked_addr_strings[j] = masked_addr_strings[j] + char
+				}
+			case '1':
+				for j := 0; j < len(masked_addr_strings); j++ {
+					masked_addr_strings[j] = masked_addr_strings[j] + "1"
+				}
+			default:
+				var new_masked_addr_strings []string
+				for _, string := range masked_addr_strings {
+					new_masked_addr_strings = append(new_masked_addr_strings, string+"0", string+"1")
+				}
+				masked_addr_strings = new_masked_addr_strings
+			}
+		}
+		value := instr.ints[1]
+		for _, masked_string := range masked_addr_strings {
+			addr, _ := strconv.ParseInt(string(masked_string), 2, 64)
+			memory[int(addr)] = value
+		}
+	}
+	total := 0
+	for _, val := range memory {
+		total = total + val
+	}
+	return total
+}
+
 func main() {
 	instructions := readInput()
 	fmt.Println(runOne(instructions))
+	fmt.Println(runTwo(instructions))
 }
