@@ -6,12 +6,15 @@ input = helper.auto_parse
 # Part 1 and 2
 a = nil
 index = 0
-spoken = Hash[input.zip([*0...input.length])]
+spoken = []
+input.each_with_index do |n, i|
+  spoken[n] = i
+end
 last = nil
-neckst = input.count(input.last) - 1
+neckst = 0
 (input.length...30000000).each do |i|
   last = neckst
-  neckst = spoken.has_key?(last) ? i - spoken[last] : 0
+  neckst = spoken[last] ? i - spoken[last] : 0
   spoken[last] = i
   if i == 2019
     a = last
