@@ -13,7 +13,6 @@ else
   config = {}
 end
 
-# Run Scripts
 desc "run script defined in config"
 task :default do
   sh "ruby #{config['directory']}#{config['ruby']}"
@@ -67,7 +66,6 @@ task :spec_year do
   sh "ls #{config['year']}/lib/*.rb | entr -r rspec #{config['year']}/spec"
 end
 
-# Run Benchmarks
 desc "run the default script in a benchmark"
 task time: ["time:ruby"]
 
@@ -84,7 +82,6 @@ namespace :time do
   end
 end
 
-# Create solution folders and files
 desc "create solution file from template and set in config"
 task :create, [:directory] do |t, args|
   directory = args[:directory]
@@ -102,6 +99,19 @@ task :create, [:directory] do |t, args|
       sh "touch #{directory}/#{filename}"
     end
   end
+  File.open('.advent_config.yml', 'w') do |file|
+    file.write("year: '#{year}'\ndirectory: #{directory}/\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
+  end
+end
+
+# Create config file if one does not exist
+desc "create config file with default values or argument"
+task :config, [:directory] do |t, args|
+  directory = args[:directory] || "2016/01"
+  year = directory.split("/").first
+  ruby_filename     = "solution.rb"
+  elixir_filename   = "solution.exs"
+  golang_filename   = "solution.go"
   File.open('.advent_config.yml', 'w') do |file|
     file.write("year: '#{year}'\ndirectory: #{directory}/\nruby: #{ruby_filename}\nelixir: #{elixir_filename}\ngolang: #{golang_filename}")
   end
