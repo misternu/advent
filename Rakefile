@@ -41,11 +41,11 @@ namespace :watch do
   # TODO add error handling for when entr is not installed
   desc "run the ruby script in entr"
   task :ruby do
-    sh "ls #{config['directory']}/*.rb | entr -r ruby #{config['ruby']}"
+    sh "ls #{config['directory']}*.rb | entr -r ruby #{config['directory']}#{config['ruby']}"
   end
   desc "run the elixir script in entr"
   task :elixir do
-    sh "ls #{config['directory']}/*.exs | entr -r elixir #{config['elixir']}"
+    sh "ls #{config['directory']}*.exs | entr -r elixir #{config['directory']}#{config['elixir']}"
   end
 end
 
