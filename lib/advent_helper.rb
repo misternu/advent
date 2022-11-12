@@ -8,12 +8,13 @@ class AdventHelper
   include CSVHelpers
   include PrintHelpers
 
+  attr_reader :script_root, :script_file
   def initialize(options = {})
     @script_root = options.fetch(:script_root, root_dir)
-    @script_file = options.fetch(:script_file, '')
-    clear if options.fetch(:clear, true)
+    @script_file = options.fetch(:script_file, nil)
+    clear if options.fetch(:clear, false)
     load_config
-    start_counter
+    start_counter if options.fetch(:counter, true)
   end
 
   def load_config
@@ -25,13 +26,13 @@ class AdventHelper
   end
 
   def start_counter
-    print "\e[2J"
-    print "Running #{@script_file}...\n"
+    puts "-" * 30
+    puts "Running #{script_file}...\n" if script_file
+    puts "\n"
     @counter = Thread.new {
       start = Time.now
       while true do
-        puts "\e[2H" + "#{(Time.now - start).round(1)}" + " " * 10
-        sleep 0.1
+        puts "\e[0F" + "#{(Time.now - start).round(1)} Seconds"
       end
     }
   end

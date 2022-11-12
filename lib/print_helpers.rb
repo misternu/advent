@@ -9,6 +9,10 @@ module PrintHelpers
     copy(*values)
   end
 
+  def p(object)
+    puts "\e[0F" + "#{object.inspect}\n\n"
+  end
+
   def print_parts(*values)
     values.each_with_index do |v, i|
       puts "Part #{i + 1}: #{v}"
