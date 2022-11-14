@@ -85,12 +85,13 @@ end
 desc "create solution file from template and set in config"
 task :create, [:directory] do |t, args|
   directory = args[:directory]
+  mkdir_p directory
   year = args[:directory].split("/").first
-  ruby_filename     = "solution.rb"
-  elixir_filename   = "solution.exs"
-  golang_filename   = "solution.go"
-  input_filename    = "input.txt"
-  sample_filename   = "sample_input.txt"
+  ruby_filename   = "solution.rb"
+  elixir_filename = "solution.exs"
+  golang_filename = "solution.go"
+  input_filename  = "input.txt"
+  sample_filename = "sample_input.txt"
   unless File.exists?("#{directory}/#{ruby_filename}")
     cp 'lib/template.rb', "#{directory}/#{ruby_filename}"
   end
