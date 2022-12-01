@@ -1,3 +1,5 @@
+require 'date'
+
 module PrintHelpers
   def clear
     system "clear"
@@ -7,6 +9,7 @@ module PrintHelpers
     stop_counter
     print_parts(*values)
     copy(*values)
+    log(*values)
   end
 
   def p(object)
@@ -21,6 +24,13 @@ module PrintHelpers
 
   def copy(*values)
     pbcopy(values.compact.last)
+  end
+
+  def log(*values)
+    path = file_path('log.csv')
+    File.open(path, 'a') do |f|
+      f.puts [DateTime.now.iso8601, *values].map(&:inspect).join(",")
+    end
   end
 
   def pbcopy(input)

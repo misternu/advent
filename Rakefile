@@ -33,6 +33,19 @@ task :golang do
   sh "go run #{config['directory']}#{config['golang']}"
 end
 
+desc "start log file and watch ruby solution"
+task start: [:watch, :stop]
+
+desc "load the timer"
+task :timer do
+  sh "ls #{config['directory']}log.csv | entr -r ruby lib/timer.rb"
+end
+
+desc "signal the timer to stop"
+task :stop do
+  File.open("#{config['directory']}/log.csv", 'a') { |f| f.puts 'END' }
+end
+
 desc "run the default script in entr"
 task watch: ["watch:ruby"]
 
@@ -87,7 +100,8 @@ FILENAMES = {
   elixir_filename: 'solution.exs',
   golang_filename: 'solution.go',
   input_filename: 'input.txt',
-  sample_filename: 'sample_input.txt'
+  sample_filename: 'sample_input.txt',
+  log_filename: 'log.csv'
 }.freeze
 
 FILE_EXTENSIONS = {
@@ -105,7 +119,7 @@ task :create, [:directory] do |t, args|
     path = "#{args[:directory]}/#{FILENAMES[:"#{language}_filename"]}"
     cp(template, path) unless File.exists?(path)
   end
-  %w[input sample].each do |blank|
+  %w[input sample log].each do |blank|
     sh "touch #{args[:directory]}/#{FILENAMES[:"#{blank}_filename"]}"
   end
 end
@@ -120,7 +134,7 @@ task :config, [:directory] do |t, args|
       "directory: #{args[:directory]}/\n"\
       "ruby: #{FILENAMES[:ruby_filename]}\n"\
       "elixir: #{FILENAMES[:elixir_filename]}\n"\
-      "golang: #{FILENAMES[:golang_filename]}"
+      "golang: #{FILENAMES[:golang_filename]}\n"
     )
   end
 end
