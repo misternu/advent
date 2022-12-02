@@ -34,7 +34,7 @@ class Timer
     if lines.empty?
       @start = Time.now
     else
-      @start = Time.parse(lines.first)
+      @start = Time.parse(lines.first.split(",").first)
       measure_elapsed
     end
     system "clear"

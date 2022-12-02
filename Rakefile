@@ -33,8 +33,16 @@ task :golang do
   sh "go run #{config['directory']}#{config['golang']}"
 end
 
+desc "load input from today's challenge"
+task :load_input do
+  year, day = config['directory'].split("/")
+  day = day.to_i.to_s
+  target = File.join(File.path(__dir__), config['directory'], 'input.txt')
+  sh "curl --cookie \"$(cat ${HOME}/.aocrc)\" https://adventofcode.com/#{year}/day/#{day}/input > #{target}"
+end
+
 desc "start log file and watch ruby solution"
-task start: [:watch, :stop]
+task start: [:load_input, :watch, :stop]
 
 desc "load the timer"
 task :timer do
