@@ -37,6 +37,23 @@ a = input.sum do |round|
   points
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Part 2
 values = {
   "A" => :R,
