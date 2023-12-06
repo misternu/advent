@@ -40,54 +40,51 @@ end
 a_out = locs.min
 
 # Part 2
-p2_seeds = seeds.each_slice(2)
-min = Float::INFINITY
+seeds = seeds.each_slice(2).map { |s, l| (s...s+l) }
 rs = [b, c, d, e, f, g, h]
-maps = { b: {}, c: {}, d: {}, e: {}, f: {}, g: {}, h: {} }
+maps = {}
 
 (:b..:h).each_with_index do |sym, i|
   m = rs[i]
+  maps[i] = {}
   m.each do |dest, src, len|
-    diff = dest - src
-    (src...(src+len)).each do |k|
-      maps[sym][k] = k + diff
-    end
+    maps[i][(src...(src+len))] = dest - src
   end
 end
 
-p maps.length
+def intersection(a, b)
+  return nil if a.end < b.begin || b.end < a.begin
+  [a.begin, b.begin].max..[a.end, b.end].min
+end
 
-# p2_seeds.each do |st, len|
-#   (st...(st+len)).each do |seed|
-#     pos = seed
+def complements(a, b)
+  result = []
 
-#     (:b..:h).each do |sym|
-#       m = maps[sym]
+  if a.begin < b.begin
+    result << (a.begin..b.begin-1)
+  end
 
-#       pos = m[pos] || pos
-#     end
+  if a.end > b.end
+    result << (b.end+1..a.end)
+  end
 
-#     min = [pos, min].min
-#   end
-# end
+  result
+end
 
-# p2_seeds.each do |st, len|
-#   (st...(st+len)).each do |seed|
-#     pos = seed
+def dig(maps, r, i = 0)
+  return [r] unless maps[i]
 
-#     [b, c, d, e, f, g, h].each do |m|
-#       m.each do |dest, src, len|
-#         if (src...(src+len)).include?(pos)
-#           pos = pos + (dest-src)
-#           break
-#         end
-#       end
-#     end
-#     min = [pos, min].min
-#   end
-# end
+  range_diff = maps[i].find { |k,v| intersection(k, r) }
+  return dig(maps, r, i+1) unless range_diff
 
-b_out = min
+  range, diff = range_diff
+  sect = intersection(range, r)
+  comps = complements(r, range).flat_map { |dr| dig(maps, dr, i) }
+  comps + dig(maps, (sect.begin+diff..sect.end+diff), i+1)
+end
+
+
+b_out = seeds.flat_map { |range| dig(maps, range) } .map(&:begin).min
 
 
 
