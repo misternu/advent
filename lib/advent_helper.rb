@@ -8,8 +8,9 @@ class AdventHelper
   include CSVHelpers
   include PrintHelpers
 
-  attr_reader :script_root, :script_file
+  attr_reader :script_root, :script_file, :options
   def initialize(options = {})
+    @options = options
     @script_root = options.fetch(:script_root, root_dir)
     @script_file = options.fetch(:script_file, nil)
     clear if options.fetch(:clear, false)
@@ -38,6 +39,7 @@ class AdventHelper
   end
 
   def stop_counter
+    return unless options.fetch(:counter, true)
     @counter.exit
   end
 
