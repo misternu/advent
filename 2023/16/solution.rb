@@ -138,8 +138,6 @@ def test_beam(map, start_beam)
   path.values.count { |v| v.any? }
 end
 
-
-
 a = test_beam(map, [0,0,1,0])
 
 # Part 2
@@ -163,8 +161,6 @@ end
 end
 
 b = max
-
-
 
 # MemoryProfiler.stop.pretty_print
 helper.output(a, b)
