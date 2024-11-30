@@ -19,7 +19,7 @@ class AdventHelper
   end
 
   def load_config
-    if File.exists?(File.join(root_dir, '.advent_config.yml'))
+    if File.exist?(File.join(root_dir, '.advent_config.yml'))
       @config = YAML.load_file(File.join(root_dir, '.advent_config.yml'))
     else
       @config = {}

@@ -6,7 +6,7 @@ input = helper.line_separated_strings('input.txt')
 sample_input = helper.line_separated_strings('sample_input.txt')
 # MemoryProfiler.start(allow_files: __FILE__)
 
-input = sample_input
+# input = sample_input
 
 # Part 1
 input = input.map do |line|
@@ -111,13 +111,12 @@ def count(pat, nums)
   end
 end
 
-b = input.sum do |pat, nums|
-  five_pat = (0...5).map { |s| pat } .join('?')
-  five_nums = nums * 5
-  count(five_pat, five_nums)
-end
-
-
+b = nil
+# b = input.sum do |pat, nums|
+#   five_pat = (0...5).map { |s| pat } .join('?')
+#   five_nums = nums * 5
+#   count(five_pat, five_nums)
+# end
 
 # MemoryProfiler.stop.pretty_print
 helper.output(a, b)

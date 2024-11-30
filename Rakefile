@@ -7,7 +7,7 @@ rescue LoadError
   # no rspec available
 end
 
-if File.exists?('.advent_config.yml')
+if File.exist?('.advent_config.yml')
   config = YAML.load_file(File.join(File.path(__dir__), '.advent_config.yml'))
 else
   config = {}
@@ -125,7 +125,7 @@ task :create, [:directory] do |t, args|
   %w[ruby elixir golang].each do |language|
     template = "lib/template.#{FILE_EXTENSIONS[language.to_sym]}"
     path = "#{args[:directory]}/#{FILENAMES[:"#{language}_filename"]}"
-    cp(template, path) unless File.exists?(path)
+    cp(template, path) unless File.exist?(path)
   end
   %w[input sample log].each do |blank|
     sh "touch #{args[:directory]}/#{FILENAMES[:"#{blank}_filename"]}"
