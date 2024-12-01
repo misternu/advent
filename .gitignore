@@ -1,5 +1,6 @@
 .advent_config.yml
 .DS_Store
 .ruby-version
+.rubocop.yml
 stats.json
 *.class
