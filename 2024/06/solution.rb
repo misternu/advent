@@ -1,6 +1,6 @@
 require_relative '../../lib/advent_helper'
 # require 'memory_profiler'
-helper = AdventHelper.new(script_root: __dir__, counter: false)
+helper = AdventHelper.new(script_root: __dir__)
 # input = helper.send(:open_file, 'input.txt').read
 input = helper.line_separated_strings('input.txt')
 # input = helper.comma_separated_strings('input.txt')
@@ -48,7 +48,7 @@ a = visited.keys.count
 
 b = 0
 
-visited.keys.each do |obst|
+visited.each_key do |obst|
   next if obstacles[obst]
   next if input_pos == obst
 
