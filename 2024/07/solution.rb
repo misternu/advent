@@ -14,12 +14,15 @@ sample_input = helper.auto_parse('sample_input.txt')
 input = input.map { |l| l.map(&:to_i) }
 
 # Part 1
-def values(numbers)
+def values(numbers, part_two = false)
   return numbers if numbers.length == 1
 
   last = numbers[-1]
-  front = values(numbers[...-1])
-  front.map { |v| last + v } + front.map { |v| last * v }
+  front = values(numbers[...-1], part_two)
+  result = front.map { |v| last + v }
+  result += front.map { |v| last * v }
+  result += front.map { |v| (v.to_s + last.to_s).to_i } if part_two
+  result
 end
 
 a = 0
@@ -31,20 +34,13 @@ input.each do |line|
 end
 
 # Part 2
-def values_prime(numbers)
-  return numbers if numbers.length == 1
-
-  values_prime([numbers[0] + numbers[1]] + numbers[2..]) +
-    values_prime([numbers[0] * numbers[1]] + numbers[2..]) +
-    values_prime([(numbers[0].to_s + numbers[1].to_s).to_i] + numbers[2..])
-end
 
 b = 0
 
 input.each do |line|
   target = line[0]
   numbers = line[1..]
-  b += target if values_prime(numbers).include?(target)
+  b += target if values(numbers, true).include?(target)
 end
 
 # MemoryProfiler.stop.pretty_print
