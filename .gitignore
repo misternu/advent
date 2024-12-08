@@ -4,3 +4,5 @@
 .rubocop.yml
 stats.json
 *.class
+# https://old.reddit.com/r/adventofcode/wiki/faqs/copyright/inputs
+**/**/*input.txt
