@@ -1,6 +1,6 @@
 require_relative '../../lib/advent_helper'
 # require 'memory_profiler'
-helper = AdventHelper.new(script_root: __dir__, counter: false)
+helper = AdventHelper.new(script_root: __dir__)
 input = helper.send(:open_file, 'input.txt').read
 sample_input = helper.send(:open_file, 'sample_input.txt').read
 
@@ -52,7 +52,8 @@ gaps = []
 j = 0
 input.split('').each_with_index do |digit, i|
   num = digit.to_i
-  next if num == 0
+  next if num.zero?
+
   if i % 2 == 0
     digits << [i / 2, j, j + num]
     j += num
@@ -63,10 +64,11 @@ input.split('').each_with_index do |digit, i|
 end
 
 digits.reverse.each do |digit|
-  id, m, n = digit
+  _, m, n = digit
   len = n - m
   i = gaps.index { |g| g[0] >= len && g[1] < m }
   next if i.nil?
+
   digit[1] = gaps[i][1]
   digit[2] = gaps[i][1] + len
   if len == gaps[i][0]
@@ -81,9 +83,7 @@ b = 0
 digits.each do |digit|
   id, m, n = digit
 
-  (m...n).each do |i|
-    b += id * i
-  end
+  (m...n).each { |i| b += id * i }
 end
 
 # MemoryProfiler.stop.pretty_print
