@@ -33,6 +33,11 @@ task :golang do
   sh "go run #{config['directory']}#{config['golang']}"
 end
 
+desc "run python script defined in config"
+task :python do
+  sh "python #{config['directory']}#{config['python']}"
+end
+
 desc "load input from today's challenge"
 task :load_input do
   year, day = config['directory'].split("/")
@@ -107,6 +112,7 @@ FILENAMES = {
   ruby_filename: 'solution.rb',
   elixir_filename: 'solution.exs',
   golang_filename: 'solution.go',
+  python_filename: 'solution.py',
   input_filename: 'input.txt',
   sample_filename: 'sample_input.txt',
   log_filename: 'log.csv'
@@ -115,14 +121,15 @@ FILENAMES = {
 FILE_EXTENSIONS = {
   ruby: 'rb',
   elixir: 'exs',
-  golang: 'go'
+  golang: 'go',
+  python: 'py'
 }.freeze
 
 desc "Create solution files and update config"
 task create: :config
 task :create, [:directory] do |t, args|
   mkdir_p args[:directory]
-  %w[ruby elixir golang].each do |language|
+  %w[ruby elixir golang python].each do |language|
     template = "lib/template.#{FILE_EXTENSIONS[language.to_sym]}"
     path = "#{args[:directory]}/#{FILENAMES[:"#{language}_filename"]}"
     cp(template, path) unless File.exist?(path)
@@ -142,7 +149,8 @@ task :config, [:directory] do |t, args|
       "directory: #{args[:directory]}/\n"\
       "ruby: #{FILENAMES[:ruby_filename]}\n"\
       "elixir: #{FILENAMES[:elixir_filename]}\n"\
-      "golang: #{FILENAMES[:golang_filename]}\n"
+      "golang: #{FILENAMES[:golang_filename]}\n"\
+      "python: solution.py\n"
     )
   end
 end
