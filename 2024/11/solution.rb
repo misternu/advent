@@ -68,3 +68,25 @@ b = stones.sum { |s| dig(s, 75, memo) }
 
 # MemoryProfiler.stop.pretty_print
 helper.output(a, b)
+
+# alternate solution simplified from tyler's
+# stones = input.first.split(' ').map(&:to_i)
+#   .each_with_object(Hash.new(0)) { |int, h| h[int] += 1 }
+
+# def blink(stones)
+#   stones.each_with_object(Hash.new(0)) do |pair, hash|
+#     if pair[0].zero?
+#       hash[1] += pair[1]
+#     elsif pair[0].to_s.length.even?
+#       hash[pair[0].to_s[0...(pair[0].to_s.length / 2)].to_i] += pair[1]
+#       hash[pair[0].to_s[(pair[0].to_s.length / 2)..].to_i] += pair[1]
+#     else
+#       hash[pair[0] * 2024] += pair[1]
+#     end
+#   end
+# end
+
+# 25.times { stones = blink(stones) }
+# a = stones.values.sum
+# 50.times { stones = blink(stones) }
+# b = stones.values.sum
