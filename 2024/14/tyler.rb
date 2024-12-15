@@ -1,7 +1,7 @@
-PATH = './inputs/day_14.txt'.freeze
+PATH = '2024/14/input.txt'.freeze
 INPUT = File.open(PATH).readlines.freeze
-XMAX = 102
-YMAX = 104
+XMAX = 101
+YMAX = 103
 SECS = 100
 
 puts "Successfully read input from #{PATH}" if INPUT
@@ -22,37 +22,16 @@ class DayFourteen
 
   def part_one
     march_robots
-    herd_robots
     calculate_robots_in_quadrants
     report(@quadrants.inject(:*), 'Safety Factor')
   end
 
   def march_robots
     @robots.each do |_, robot|
-      robot[:x] += robot[:dx] * SECS
-      robot[:y] += robot[:dy] * SECS
+      robot[:x] = (robot[:x] + (robot[:dx] * SECS)) % XMAX
+      robot[:y] = (robot[:y] + (robot[:dy] * SECS)) % YMAX
     end
     # puts @robots.inspect
-  end
-
-  def herd_robots
-    x_factor = XMAX + 1
-    y_factor = YMAX + 1
-    @robots.each do |_, robot|
-      while robot[:x] < 0
-        robot[:x] += x_factor
-      end
-      while robot[:x] > XMAX
-        robot[:x] -= x_factor
-      end
-      while robot[:y] < 0
-        robot[:y] += y_factor
-      end
-      while robot[:y] > YMAX
-        robot[:y] -= y_factor
-      end
-    end
-    # print_map
   end
 
   def print_map
