@@ -5,7 +5,7 @@ input = helper.line_separated_strings('input.txt')
 sample_input = helper.line_separated_strings('sample_input.txt')
 # MemoryProfiler.start(allow_files: __FILE__)
 
-input = sample_input
+# input = sample_input
 grid = {}
 start = nil
 dest = nil
@@ -62,13 +62,60 @@ until queue.empty?
     vars = option[0..2]
     queue << option if scores[vars].nil? || option.last < scores[vars]
   end
+
+  queue = queue.sort_by { |_, _, _, score| score }
 end
 
-keys = scores.keys.select { |x, y, dir| x == dest[0] && y == dest[1] }
-a = keys.map { |k| scores[k] } .min
+keys = scores.keys.select { |x, y, _| x == dest[0] && y == dest[1] }
+a = keys.map { |k| scores[k] }.min
 
 # Part 2
-b = nil
+def reverse_options(grid, scores, pos)
+  x, y, dir, score = pos
+  result = []
+  dx, dy = DIRS[dir]
+  ox, oy = x - dx, y - dy
+  return [] if grid[[ox, oy]]
+  # back
+  if scores[[ox, oy, dir]] == score - 1
+    result << [ox, oy, dir, score - 1]
+  end
+  # back left
+  if scores[[ox, oy, (dir + 1) % 4]] == score - 1001
+    result << [ox, oy, (dir + 1) % 4, score - 1001]
+  end
+  # back right
+  if scores[[ox, oy, (dir - 1) % 4]] == score - 1001
+    result << [ox, oy, (dir - 1) % 4, score - 1001]
+  end
+  result
+end
+
+key = keys.find { |k| scores[k] == a }
+queue = [(key + [a])]
+seen = {}
+until queue.empty?
+  pos = queue.shift
+  seen[[pos[0], pos[1]]] = true
+  options = reverse_options(grid, scores, pos)
+  queue = queue + options
+end
+
+# string = (0...input.length).map do |y|
+#   (0...input.first.length).map do |x|
+#     pos = [x, y]
+#     if grid[pos]
+#       '#'
+#     elsif seen[pos]
+#       'O'
+#     else
+#       '.'
+#     end
+#   end.join
+# end.join("\n")
+# puts string
+
+b = seen.keys.length
 
 # MemoryProfiler.stop.pretty_print
 helper.output(a, b)
