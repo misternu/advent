@@ -25,11 +25,11 @@ end
 wire_proc = wires.map do |m, op, n, out|
   case op
   when "AND"
-    [[m, n], Proc.new { |mem| mem[out] = mem[m] & mem[n] }]
+    [[m, n], proc { |mem| mem[out] = mem[m] & mem[n] }]
   when "XOR"
-    [[m, n], Proc.new { |mem| mem[out] = mem[m] ^ mem[n] }]
+    [[m, n], proc { |mem| mem[out] = mem[m] ^ mem[n] }]
   when "OR"
-    [[m, n], Proc.new { |mem| mem[out] = mem[m] | mem[n] }]
+    [[m, n], proc { |mem| mem[out] = mem[m] | mem[n] }]
   end
 end
 
