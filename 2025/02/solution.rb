@@ -14,13 +14,18 @@ b = 0
 input.each do |n, m|
   (n..m).each do |id|
     j = id.to_s
-    mid = j.length / 2
+    length = j.length
+    mid = length / 2
     if j[0...mid] == j[mid..]
       a += id
       b += id
     else
       chars = j.chars
-      (1..mid).each do |i|
+      next if chars.uniq.length > mid
+
+      mid.downto(1).each do |i|
+        next unless (length % i).zero?
+
         if chars.rotate(i).join == j
           b += id
           break
