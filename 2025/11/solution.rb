@@ -36,15 +36,15 @@ class PathCounter
   def initialize(edges)
     @edges = edges
     @memo = {}
-    @visiting = {}
+    # @visiting = {}
   end
 
   def count_paths(node)
     return @memo[node] if @memo[node]
-    return [0, 0, 0, 0] if @visiting[node]
+    # return [0, 0, 0, 0] if @visiting[node]
     return [1, 0, 0, 0] if node == OUT
 
-    @visiting[node] = true
+    # @visiting[node] = true
 
     totals = [0, 0, 0, 0]
     @edges[node].each do |e|
@@ -65,7 +65,7 @@ class PathCounter
       end
     end
 
-    @visiting.delete(node)
+    # @visiting.delete(node)
     @memo[node] = totals
     totals
   end
